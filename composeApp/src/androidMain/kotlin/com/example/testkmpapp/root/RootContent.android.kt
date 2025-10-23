@@ -14,7 +14,7 @@ actual fun <C : Any, T : Any> backAnimation(
     backHandler: BackHandler,
     onBack: () -> Unit
 ): StackAnimation<C, T> {
-    predictiveBackAnimation(
+    return predictiveBackAnimation(
         backHandler = backHandler,
         fallbackAnimation = stackAnimation(fade() + slide()),
         onBack = onBack

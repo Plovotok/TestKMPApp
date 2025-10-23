@@ -27,6 +27,7 @@ kotlin {
             export(libs.decompose)
             export(libs.essenty.lifecycle)
             export(libs.essenty.back.handler)
+            export(libs.essenty.state.keeper)
         }
     }
     
@@ -52,6 +53,7 @@ kotlin {
             api(libs.essenty.lifecycle.coroutines)
 
             implementation(libs.koin.core)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

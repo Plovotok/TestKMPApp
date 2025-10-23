@@ -10,6 +10,7 @@ import com.example.testkmpapp.root.RootComponent
 import com.example.testkmpapp.root.RootContent
 
 @OptIn(ExperimentalDecomposeApi::class)
+@Suppress("unused") // Used in Swift
 fun RootViewController(root: RootComponent, backDispatcher: BackDispatcher) = ComposeUIViewController {
     PredictiveBackGestureOverlay(
         backDispatcher = backDispatcher,
