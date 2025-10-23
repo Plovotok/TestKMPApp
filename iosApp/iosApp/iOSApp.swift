@@ -13,7 +13,7 @@ struct iOSApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootView(root: appDelegate.root, backDispatcher: appDelegate.backDispatcher).ignoresSafeArea()
+            RootView(root: appDelegate.root, backDispatcher: appDelegate.backDispatcher).ignoresSafeArea(.all)
         }
     }
 }
