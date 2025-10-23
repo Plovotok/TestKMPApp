@@ -5,6 +5,10 @@ import ComposeApp
 struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate: AppDelegate
+    
+    init() {
+        PlatformModuleKt.doInitKoin()
+    }
 
     
     var body: some Scene {
