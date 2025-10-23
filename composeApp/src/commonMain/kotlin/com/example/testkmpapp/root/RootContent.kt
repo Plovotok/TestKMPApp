@@ -10,16 +10,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.essenty.backhandler.BackHandler
 import com.example.testkmpapp.main.MainContent
 import com.example.testkmpapp.ui.AppColorScheme
 import com.example.testkmpapp.ui.LocalAppScheme
 import com.example.testkmpapp.welcome.WelcomeContent
 
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun RootContent(
     component: RootComponent,
@@ -48,7 +53,7 @@ fun RootContent(
                 Children(
                     stack = component.stack,
                     modifier = Modifier.fillMaxSize(),
-                    animation = stackAnimation(fade() + slide())
+                    animation = backAnimation(component.backHandler, component::onBack)
                 ) {
                     when (val instance = it.instance) {
                         is RootComponent.Child.Main -> MainContent(component = instance.component)
@@ -59,6 +64,11 @@ fun RootContent(
         }
     }
 }
+
+expect fun <C : Any, T : Any> backAnimation(
+    backHandler: BackHandler,
+    onBack: () -> Unit,
+): StackAnimation<C, T>
 
 fun lightColorScheme() = AppColorScheme(
     primary = Color.Blue,

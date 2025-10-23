@@ -3,9 +3,19 @@ package com.example.testkmpapp
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.ComposeUIViewController
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackGestureOverlay
+import com.arkivanov.essenty.backhandler.BackDispatcher
 import com.example.testkmpapp.root.RootComponent
 import com.example.testkmpapp.root.RootContent
 
-fun RootViewController(root: RootComponent) = ComposeUIViewController {
-    RootContent(root, modifier = Modifier.fillMaxSize())
+@OptIn(ExperimentalDecomposeApi::class)
+fun RootViewController(root: RootComponent, backDispatcher: BackDispatcher) = ComposeUIViewController {
+    PredictiveBackGestureOverlay(
+        backDispatcher = backDispatcher,
+        backIcon = null,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        RootContent(root, modifier = Modifier.fillMaxSize())
+    }
 }

@@ -26,6 +26,7 @@ kotlin {
 
             export(libs.decompose)
             export(libs.essenty.lifecycle)
+            export(libs.essenty.back.handler)
         }
     }
     

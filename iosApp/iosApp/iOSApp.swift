@@ -13,7 +13,7 @@ struct iOSApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootView(root: appDelegate.root)
+            RootView(root: appDelegate.root, backDispatcher: appDelegate.backDispatcher)
         }
     }
 }
@@ -22,4 +22,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     let root: RootComponent = DefaultRootComponent(
         ctx: DefaultComponentContext(lifecycle: ApplicationLifecycle())
     )
+    
+    var backDispatcher: BackDispatcher = BackDispatcherKt.BackDispatcher()
 }

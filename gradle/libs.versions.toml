@@ -33,6 +33,7 @@ decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decom
 decompose-extensions-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
 essenty-lifecycle = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
 essenty-lifecycle-coroutines = { group = "com.arkivanov.essenty", name = "lifecycle-coroutines", version.ref = "essenty" }
+essenty-back-handler = { group = "com.arkivanov.essenty", name = "back-handler", version.ref = "essenty" }
 
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"}
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
