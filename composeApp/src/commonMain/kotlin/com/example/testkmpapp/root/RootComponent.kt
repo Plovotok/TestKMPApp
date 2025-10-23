@@ -12,7 +12,7 @@ interface RootComponent {
     fun onBack()
 
     sealed class Child() {
-        class Main(val component: MainComponent): RootComponent.Child()
-        class Welcome(val component: WelcomeComponent): RootComponent.Child()
+        class Main(val component: MainComponent): Child()
+        class Welcome(val component: WelcomeComponent): Child()
     }
 }

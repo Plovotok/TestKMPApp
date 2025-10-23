@@ -5,12 +5,17 @@ import com.arkivanov.decompose.value.Value
 
 interface WelcomeComponent {
 
+    val promo: String
     val model: Value<Model>
 
-    fun onUpdateGreetingText()
+    fun onLoginChange(newValue: String)
+    fun onPasswordChange(newPassword: String)
+
+    fun onRegister()
     fun onBackClicked()
 
     data class Model(
-        val greetingText: String = "Welcome from Decompose!"
+        val login: String = "",
+        val password: String = ""
     )
 }

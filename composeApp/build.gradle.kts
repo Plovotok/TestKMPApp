@@ -48,6 +48,7 @@ kotlin {
             api(libs.decompose)
             api(libs.decompose.extensions.compose)
             api(libs.essenty.lifecycle)
+            api(libs.essenty.lifecycle.coroutines)
 
             implementation(libs.koin.core)
         }

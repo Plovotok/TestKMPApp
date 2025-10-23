@@ -31,17 +31,20 @@ class DefaultRootComponent(
     private fun child(config: Config, childComponentContext: ComponentContext): RootComponent.Child =
         when (config) {
             is Config.Main -> RootComponent.Child.Main(mainComponent(childComponentContext))
-            is Config.Welcome -> RootComponent.Child.Welcome(welcomeComponent(childComponentContext))
+            is Config.Welcome -> RootComponent.Child.Welcome(welcomeComponent(config.promo, childComponentContext))
         }
 
     private fun mainComponent(componentContext: ComponentContext): MainComponent =
         DefaultMainComponent(
             componentContext = componentContext,
-            onShowWelcome = { navigation.pushNew(Config.Welcome) },
+            onShowWelcome = {
+                navigation.pushNew(Config.Welcome(it))
+            }
         )
 
-    private fun welcomeComponent(componentContext: ComponentContext): WelcomeComponent =
+    private fun welcomeComponent(promo: String, componentContext: ComponentContext): WelcomeComponent =
         DefaultWelcomeComponent(
+            promo = promo,
             componentContext = componentContext,
             onFinished = navigation::pop,
         )
@@ -57,7 +60,7 @@ class DefaultRootComponent(
         data object Main: Config
 
         @Serializable
-        data object Welcome: Config
+        data class Welcome(val promo: String): Config
     }
 
 }
