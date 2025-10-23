@@ -14,6 +14,3 @@ struct RootView: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
-
-
-

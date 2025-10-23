@@ -1,9 +1,6 @@
 package com.example.testkmpapp.root
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -13,11 +10,6 @@ import androidx.compose.ui.graphics.Color
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.essenty.backhandler.BackHandler
 import com.example.testkmpapp.main.MainContent
 import com.example.testkmpapp.ui.AppColorScheme
@@ -46,8 +38,7 @@ fun RootContent(
         ) {
             Surface(
                 modifier = modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemBars),
+                    .fillMaxSize(),
                 color = Color.White
             ) {
                 Children(
