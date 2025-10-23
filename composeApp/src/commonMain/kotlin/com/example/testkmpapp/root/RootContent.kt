@@ -1,5 +1,6 @@
 package com.example.testkmpapp.root
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,7 +24,7 @@ fun RootContent(
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(
-        LocalAppScheme provides lightColorScheme()
+        LocalAppScheme provides if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
         val colors = LocalAppScheme.current
 
@@ -39,7 +40,7 @@ fun RootContent(
             Surface(
                 modifier = modifier
                     .fillMaxSize(),
-                color = Color.White
+                color = colors.background
             ) {
                 Children(
                     stack = component.stack,
@@ -65,4 +66,10 @@ fun lightColorScheme() = AppColorScheme(
     primary = Color.Blue,
     background = Color.White,
     onBackground = Color.Black
+)
+
+fun darkColorScheme() = AppColorScheme(
+    primary = Color.Blue,
+    background = Color.Black,
+    onBackground = Color.White
 )
