@@ -2,19 +2,16 @@ import UIKit
 import SwiftUI
 import ComposeApp
 
-struct ComposeView: UIViewControllerRepresentable {
+struct RootView: UIViewControllerRepresentable {
+    let root: RootComponent
+    
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        let controller = RootViewControllerKt.RootViewController(root: root)
+        controller.overrideUserInterfaceStyle = .light
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-}
-
-struct ContentView: View {
-    var body: some View {
-        ComposeView()
-            .ignoresSafeArea()
-    }
 }
 
 
