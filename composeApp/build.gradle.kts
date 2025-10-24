@@ -36,6 +36,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation(libs.kotlinx.coroutines.android)
+
+            implementation("io.ktor:ktor-client-android:3.3.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -54,6 +57,19 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization)
+
+            implementation(libs.kotlinx.coroutines.core)
+
+            implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+            implementation("io.coil-kt.coil3:coil-network-ktor3:3.3.0")
+        }
+        iosMain.dependencies {
+            implementation("io.ktor:ktor-client-darwin:3.3.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

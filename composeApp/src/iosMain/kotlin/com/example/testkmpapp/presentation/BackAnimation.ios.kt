@@ -1,4 +1,4 @@
-package com.example.testkmpapp.root
+package com.example.testkmpapp.presentation
 
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween

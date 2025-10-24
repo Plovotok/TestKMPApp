@@ -10,6 +10,7 @@ actual val platformModule: Module = module {
     single<Platform> { IOSPlatform() }
 }
 
+@Suppress("unused") // Used in Swift
 fun initKoin() {
     startKoin {
         modules(appModule())

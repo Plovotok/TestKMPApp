@@ -3,6 +3,7 @@ package com.example.testkmpapp
 import com.arkivanov.essenty.statekeeper.SerializableContainer
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.serialization.json.Json
 import platform.Foundation.NSCoder
 import platform.Foundation.NSString
 import platform.Foundation.decodeTopLevelObjectOfClass
@@ -22,4 +23,9 @@ fun restore(coder: NSCoder): SerializableContainer? =
         } catch (e: Exception) {
             null
         }
+    }
+
+internal val json =
+    Json {
+        allowStructuredMapKeys = true
     }

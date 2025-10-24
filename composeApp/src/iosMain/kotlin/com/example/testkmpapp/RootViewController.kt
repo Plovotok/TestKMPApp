@@ -6,8 +6,8 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackGestureOverlay
 import com.arkivanov.essenty.backhandler.BackDispatcher
-import com.example.testkmpapp.root.RootComponent
-import com.example.testkmpapp.root.RootContent
+import com.example.testkmpapp.presentation.root.RootComponent
+import com.example.testkmpapp.presentation.root.RootContent
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Suppress("unused") // Used in Swift

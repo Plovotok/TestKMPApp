@@ -1,4 +1,4 @@
-package com.example.testkmpapp.ui
+package com.example.testkmpapp.presentation.ui
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color

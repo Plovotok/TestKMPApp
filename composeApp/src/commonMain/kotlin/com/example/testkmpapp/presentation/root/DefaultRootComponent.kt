@@ -1,4 +1,4 @@
-package com.example.testkmpapp.root
+package com.example.testkmpapp.presentation.root
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -7,10 +7,10 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
-import com.example.testkmpapp.main.DefaultMainComponent
-import com.example.testkmpapp.main.MainComponent
-import com.example.testkmpapp.welcome.DefaultWelcomeComponent
-import com.example.testkmpapp.welcome.WelcomeComponent
+import com.example.testkmpapp.presentation.home.DefaultHomeComponent
+import com.example.testkmpapp.presentation.home.HomeComponent
+import com.example.testkmpapp.presentation.info.DefaultBookInfoComponent
+import com.example.testkmpapp.presentation.info.BookInfoComponent
 import kotlinx.serialization.Serializable
 
 class DefaultRootComponent(
@@ -23,30 +23,30 @@ class DefaultRootComponent(
     override val stack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = navigation,
         serializer = Config.serializer(),
-        initialConfiguration = Config.Main,
+        initialConfiguration = Config.Home,
         handleBackButton = true,
         childFactory = ::child
     )
 
     private fun child(config: Config, childComponentContext: ComponentContext): RootComponent.Child =
         when (config) {
-            is Config.Main -> RootComponent.Child.Main(mainComponent(childComponentContext))
-            is Config.Welcome -> RootComponent.Child.Welcome(welcomeComponent(config.promo, childComponentContext))
+            is Config.Home -> RootComponent.Child.Home(homeComponent(childComponentContext))
+            is Config.BookInfo -> RootComponent.Child.BookInfo(bookInfoComponent(config.id, childComponentContext))
         }
 
-    private fun mainComponent(componentContext: ComponentContext): MainComponent =
-        DefaultMainComponent(
+    private fun homeComponent(componentContext: ComponentContext): HomeComponent =
+        DefaultHomeComponent(
             componentContext = componentContext,
-            onShowWelcome = {
-                navigation.pushNew(Config.Welcome(it))
+            onBookClicked = {
+                navigation.pushNew(Config.BookInfo(it))
             }
         )
 
-    private fun welcomeComponent(promo: String, componentContext: ComponentContext): WelcomeComponent =
-        DefaultWelcomeComponent(
-            promo = promo,
+    private fun bookInfoComponent(id: Int, componentContext: ComponentContext): BookInfoComponent =
+        DefaultBookInfoComponent(
+            id = id,
             componentContext = componentContext,
-            onFinished = navigation::pop,
+            onGoBack = ::onBack
         )
 
     override fun onBack() {
@@ -57,10 +57,10 @@ class DefaultRootComponent(
     sealed interface Config {
 
         @Serializable
-        data object Main: Config
+        data object Home: Config
 
         @Serializable
-        data class Welcome(val promo: String): Config
+        data class BookInfo(val id: Int): Config
     }
 
 }

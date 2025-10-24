@@ -1,4 +1,4 @@
-package com.example.testkmpapp.root
+package com.example.testkmpapp.presentation.root
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,12 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
-import com.arkivanov.essenty.backhandler.BackHandler
-import com.example.testkmpapp.main.MainContent
-import com.example.testkmpapp.ui.AppColorScheme
-import com.example.testkmpapp.ui.LocalAppScheme
-import com.example.testkmpapp.welcome.WelcomeContent
+import com.example.testkmpapp.presentation.backAnimation
+import com.example.testkmpapp.presentation.home.HomeContent
+import com.example.testkmpapp.presentation.ui.AppColorScheme
+import com.example.testkmpapp.presentation.ui.LocalAppScheme
+import com.example.testkmpapp.presentation.info.BookInfoContent
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -48,8 +47,8 @@ fun RootContent(
                     animation = backAnimation(component.backHandler, component::onBack)
                 ) {
                     when (val instance = it.instance) {
-                        is RootComponent.Child.Main -> MainContent(component = instance.component)
-                        is RootComponent.Child.Welcome -> WelcomeContent(component = instance.component)
+                        is RootComponent.Child.Home -> HomeContent(component = instance.component)
+                        is RootComponent.Child.BookInfo -> BookInfoContent(component = instance.component)
                     }
                 }
             }
@@ -57,19 +56,14 @@ fun RootContent(
     }
 }
 
-expect fun <C : Any, T : Any> backAnimation(
-    backHandler: BackHandler,
-    onBack: () -> Unit,
-): StackAnimation<C, T>
-
 fun lightColorScheme() = AppColorScheme(
-    primary = Color.Blue,
+    primary = Color(0xff0073ff),
     background = Color.White,
     onBackground = Color.Black
 )
 
 fun darkColorScheme() = AppColorScheme(
-    primary = Color.Blue,
+    primary = Color(0xff0066ff),
     background = Color.Black,
     onBackground = Color.White
 )

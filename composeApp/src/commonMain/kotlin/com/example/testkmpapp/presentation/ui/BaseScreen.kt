@@ -1,6 +1,5 @@
-package com.example.testkmpapp.ui
+package com.example.testkmpapp.presentation.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues

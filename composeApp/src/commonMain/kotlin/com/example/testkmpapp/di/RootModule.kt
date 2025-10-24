@@ -1,3 +1,10 @@
 package com.example.testkmpapp.di
 
-fun appModule() = listOf(platformModule)
+import com.example.testkmpapp.data.di.networkModule
+import com.example.testkmpapp.data.di.repositoryModule
+
+fun appModule() = listOf(
+    platformModule,
+    networkModule,
+    repositoryModule
+)
