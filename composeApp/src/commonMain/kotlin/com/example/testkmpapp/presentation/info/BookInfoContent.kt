@@ -18,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,6 +51,7 @@ import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.BookTopBar
 import com.example.testkmpapp.presentation.ui.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookInfoHeaderImage
 import com.example.testkmpapp.presentation.ui.components.StarRating
 import com.example.testkmpapp.presentation.ui.components.icons.BackButton
@@ -93,13 +93,9 @@ fun BookInfoContent(
                             .graphicsLayer {
                                 this.alpha = topBarAlpha
                             }
-                            .background(MaterialTheme.colorScheme.background)
+                            .background(colorScheme.background)
                     )
-                    val iconsColor = if (showTitle) MaterialTheme.colorScheme.primary else {
-                        if (isLightImage) {
-                            MaterialTheme.colorScheme.onBackground
-                        } else MaterialTheme.colorScheme.background
-                    }
+                    val iconsColor = colorScheme.primary
 
                     BookTopBar(
                         title = {
@@ -200,11 +196,16 @@ fun BookInfoContent(
                                 onRefresh = component::getBookInfo
                             )
                         } else {
-                            Text(
-                                text = model.error.description() ?: "Something went wrong :(",
-                                modifier = Modifier.padding(horizontal = 40.dp),
-                                textAlign = TextAlign.Center
-                            )
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = model.error.description() ?: "Something went wrong :(",
+                                    modifier = Modifier.padding(horizontal = 40.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     } else {
                         model.fullInfo?.let {
@@ -233,7 +234,7 @@ fun BookInfoContent(
                                         text = ((rating * 100).toInt().toDouble() / 10).toString(),
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color.Gray
+                                        color = colorScheme.lightGrayTinted
                                     )
                                 }
 
@@ -242,7 +243,7 @@ fun BookInfoContent(
                                         text = "$it pages",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color.Gray
+                                        color = colorScheme.lightGrayTinted
                                     )
                                 }
 
@@ -251,7 +252,7 @@ fun BookInfoContent(
                             val description = it.desc?.ifEmpty { null } ?: "-"
                             Text(
                                 text = buildAnnotatedString {
-                                    withStyle(SpanStyle(color = Color.Gray)) {
+                                    withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
                                         append("Description: ")
                                     }
                                     append(description)
@@ -263,7 +264,7 @@ fun BookInfoContent(
                             if (it.authors.isNotEmpty()) {
                                 Text(
                                     text = buildAnnotatedString {
-                                        withStyle(SpanStyle(color = Color.Gray)) {
+                                        withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
                                             append("Authors: ")
                                         }
                                         it.authors.forEachIndexed { index, author ->

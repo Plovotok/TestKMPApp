@@ -8,14 +8,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +35,7 @@ import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.NoInternetScreen
 import com.example.testkmpapp.presentation.ui.components.BookListItem
+import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,12 +93,41 @@ fun HomeContent(
                         }
                     }
 
+                    val query by component.query.subscribeAsState()
+
                     LazyColumn(
                         contentPadding = it,
                         state = listState,
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        item {
+                            SearchInputText(
+                                text = query,
+                                onTextChange = component::onQueryChanged,
+                                hint = "eg. Harry Potter",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp)
+                                    .padding(
+                                        vertical = 6.dp
+                                    ),
+                                trailingContent = {
+                                    IconButton(
+                                        onClick = {}
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.FilterList,
+                                            contentDescription = "Filters",
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+                                },
+                                onSearch = {
+
+                                }
+                            )
+                        }
                         items(state.books) { book ->
                             BookListItem(
                                 book = book,

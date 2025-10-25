@@ -15,7 +15,12 @@ interface HomeComponent {
 
     fun retry()
 
+    val query: Value<String>
+
+    fun onQueryChanged(newQuery: String)
+
     data class BooksState(
+        val query: String = "",
         val books: List<BookPreview> = emptyList(),
         val isRefreshing: Boolean = true,
         val refreshError: Throwable? = null,

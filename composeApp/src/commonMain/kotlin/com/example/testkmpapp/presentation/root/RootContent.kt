@@ -33,15 +33,3 @@ fun RootContent(
         }
     }
 }
-
-fun lightColorScheme() = AppColorScheme(
-    primary = Color(0xff0073ff),
-    background = Color.White,
-    onBackground = Color.Black
-)
-
-fun darkColorScheme() = AppColorScheme(
-    primary = Color(0xff0066ff),
-    background = Color.Black,
-    onBackground = Color.White
-)
