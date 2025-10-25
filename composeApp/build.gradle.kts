@@ -70,6 +70,8 @@ kotlin {
 
             implementation(libs.compottie)
             implementation(libs.kmpalette.core)
+
+            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.3.0")

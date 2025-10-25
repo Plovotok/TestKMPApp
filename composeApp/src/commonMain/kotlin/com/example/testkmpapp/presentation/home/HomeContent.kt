@@ -1,6 +1,5 @@
 package com.example.testkmpapp.presentation.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -22,14 +20,13 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.example.testkmpapp.presentation.description
 import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.components.BookListItem
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,57 +87,27 @@ fun HomeContent(
                     LazyColumn(
                         contentPadding = it,
                         state = listState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         items(state.books) { book ->
-
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = book.title,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.StartEllipsis
-                                    )
-                                },
-                                supportingContent = {
-                                    book.subTitle?.let {
-                                        Text(text = it, maxLines = 1)
-                                    }
-                                },
-                                leadingContent = {
-                                    AsyncImage(
-                                        model = book.image,
-                                        contentDescription = book.title,
-                                        modifier = Modifier.size(64.dp)
-                                    )
-                                },
-                                modifier = Modifier.clickable {
+                            BookListItem(
+                                book = book,
+                                onClick = {
                                     component.showBookInfo(book)
                                 }
                             )
                         }
                         if (state.isAppending) {
                             item {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator(modifier = Modifier.size(28.dp))
-                                }
+                                CircularProgressIndicator(modifier = Modifier.size(28.dp))
                             }
                         } else if (state.appendError != null) {
                             item {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
+                                TextButton(
+                                    onClick = component::retry
                                 ) {
-                                    TextButton(
-                                        onClick = {
-                                            component.retry()
-                                        }
-                                    ) {
-                                        Text(text = "Retry")
-                                    }
+                                    Text(text = "Retry")
                                 }
                             }
                         }
