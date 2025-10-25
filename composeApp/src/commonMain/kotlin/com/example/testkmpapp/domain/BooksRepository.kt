@@ -1,6 +1,7 @@
 package com.example.testkmpapp.domain
 
-import com.example.testkmpapp.data.models.BookPagingResponse
+import com.example.testkmpapp.domain.models.BookPagingResponse
+import com.example.testkmpapp.domain.models.BookPreview
 
 interface BooksRepository {
 
@@ -12,6 +13,6 @@ interface BooksRepository {
         offset: Int
     ): BookPagingResponse
 
-    suspend fun getBookInfo(id: Int)
+    suspend fun getBookInfo(id: Int): BookPreview
 
 }

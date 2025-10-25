@@ -2,26 +2,19 @@ package com.example.testkmpapp.presentation.home
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
-import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.example.testkmpapp.data.models.BookPagingResponse
+import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.BooksRepository
 import com.example.testkmpapp.presentation.Paginator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import com.example.testkmpapp.presentation.base.BaseViewModel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainViewModel: InstanceKeeper.Instance, KoinComponent {
+class MainViewModel: BaseViewModel(), KoinComponent {
 
     private val repository: BooksRepository by inject()
-
-
-    private val viewModelScope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
 
     val state: MutableValue<HomeComponent.BooksState> = MutableValue(HomeComponent.BooksState())
 
@@ -53,6 +46,7 @@ class MainViewModel: InstanceKeeper.Instance, KoinComponent {
                 )
                 Result.success(result)
             } catch (e: Exception) {
+                e.printStackTrace()
                 currentCoroutineContext().ensureActive()
                 Result.failure(e)
             }
@@ -101,11 +95,5 @@ class MainViewModel: InstanceKeeper.Instance, KoinComponent {
         viewModelScope.launch {
             paginator.retry()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModelScope.cancel()
     }
 }

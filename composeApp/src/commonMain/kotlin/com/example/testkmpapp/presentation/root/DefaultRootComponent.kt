@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
+import com.example.testkmpapp.domain.models.BookPreview
 import com.example.testkmpapp.presentation.home.DefaultHomeComponent
 import com.example.testkmpapp.presentation.home.HomeComponent
 import com.example.testkmpapp.presentation.info.DefaultBookInfoComponent
@@ -31,7 +32,7 @@ class DefaultRootComponent(
     private fun child(config: Config, childComponentContext: ComponentContext): RootComponent.Child =
         when (config) {
             is Config.Home -> RootComponent.Child.Home(homeComponent(childComponentContext))
-            is Config.BookInfo -> RootComponent.Child.BookInfo(bookInfoComponent(config.id, childComponentContext))
+            is Config.BookInfo -> RootComponent.Child.BookInfo(bookInfoComponent(config.preview, childComponentContext))
         }
 
     private fun homeComponent(componentContext: ComponentContext): HomeComponent =
@@ -42,9 +43,9 @@ class DefaultRootComponent(
             }
         )
 
-    private fun bookInfoComponent(id: Int, componentContext: ComponentContext): BookInfoComponent =
+    private fun bookInfoComponent(preview: BookPreview, componentContext: ComponentContext): BookInfoComponent =
         DefaultBookInfoComponent(
-            id = id,
+            preview = preview,
             componentContext = componentContext,
             onGoBack = ::onBack
         )
@@ -60,7 +61,7 @@ class DefaultRootComponent(
         data object Home: Config
 
         @Serializable
-        data class BookInfo(val id: Int): Config
+        data class BookInfo(val preview: BookPreview): Config
     }
 
 }

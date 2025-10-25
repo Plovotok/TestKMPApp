@@ -1,4 +1,4 @@
-package com.example.testkmpapp.data.models
+package com.example.testkmpapp.domain.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

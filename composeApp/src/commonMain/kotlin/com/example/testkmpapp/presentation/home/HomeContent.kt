@@ -21,11 +21,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.example.testkmpapp.presentation.description
+import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
+import com.example.testkmpapp.presentation.ui.NoInternetScreen
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,10 +59,19 @@ fun HomeContent(
                 }
 
                 state.refreshError != null -> {
-                    Text(
-                        text = state.refreshError!!.message.toString(),
-                        modifier = Modifier.padding(horizontal = 40.dp)
-                    )
+                    val isInternetError = state.refreshError.isInternetError()
+
+                    if (isInternetError) {
+                        NoInternetScreen(
+                            onRefresh = component::retry
+                        )
+                    } else {
+                        Text(
+                            text = state.refreshError!!.description() ?: "Something went wrong :(",
+                            modifier = Modifier.padding(horizontal = 40.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
 
                 else -> {
@@ -102,7 +115,7 @@ fun HomeContent(
                                     )
                                 },
                                 modifier = Modifier.clickable {
-                                    component.showBookInfo(book.id)
+                                    component.showBookInfo(book)
                                 }
                             )
                         }

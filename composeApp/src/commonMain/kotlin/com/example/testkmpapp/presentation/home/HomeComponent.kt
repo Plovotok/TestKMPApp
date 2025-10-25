@@ -1,13 +1,13 @@
 package com.example.testkmpapp.presentation.home
 
 import com.arkivanov.decompose.value.Value
-import com.example.testkmpapp.data.models.BookPreview
+import com.example.testkmpapp.domain.models.BookPreview
 
 interface HomeComponent {
 
     val state: Value<BooksState>
 
-    fun showBookInfo(id: Int)
+    fun showBookInfo(book: BookPreview)
 
     fun getBooks(query: String)
 

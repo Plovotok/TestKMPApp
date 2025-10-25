@@ -3,15 +3,21 @@ package com.example.testkmpapp.presentation.info
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.example.testkmpapp.domain.models.BookPreview
+import com.example.testkmpapp.presentation.base.getViewModel
+import com.example.testkmpapp.presentation.home.MainViewModel
 import org.koin.core.component.KoinComponent
 
 class DefaultBookInfoComponent(
     private val componentContext: ComponentContext,
-    private val id: Int,
+    override val preview: BookPreview,
     private val onGoBack: () -> Unit
 ) : BookInfoComponent, ComponentContext by componentContext, KoinComponent {
 
-    override val state: Value<BookInfoComponent.BookState> = MutableValue(BookInfoComponent.BookState())
+    private val vm = getViewModel { BookInfoViewModel(preview.id) }
 
+    override val state: Value<BookInfoComponent.BookState> = vm.state
+
+    override fun getBookInfo() = vm.getBookInfo()
     override fun onBack() = onGoBack()
 }
