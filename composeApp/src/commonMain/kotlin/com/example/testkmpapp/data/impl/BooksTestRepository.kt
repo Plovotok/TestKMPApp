@@ -4,6 +4,7 @@ import com.example.testkmpapp.domain.BooksRepository
 import com.example.testkmpapp.domain.models.Author
 import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.models.BookPreview
+import com.example.testkmpapp.domain.models.Genre
 import com.example.testkmpapp.domain.models.Rating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

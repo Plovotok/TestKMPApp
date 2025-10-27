@@ -19,9 +19,9 @@ private val client by lazy {
         expectSuccess = true
 
         install(HttpTimeout) {
-            requestTimeoutMillis = 10_000
-            socketTimeoutMillis = 10_000
-            connectTimeoutMillis = 10_000
+            requestTimeoutMillis = 20_000
+            socketTimeoutMillis = 20_000
+            connectTimeoutMillis = 20_000
         }
 
         install(ContentNegotiation) {

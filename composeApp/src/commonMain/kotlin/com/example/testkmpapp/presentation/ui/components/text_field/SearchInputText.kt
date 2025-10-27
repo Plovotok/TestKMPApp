@@ -32,7 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.testkmpapp.presentation.ui.theme.BooksTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import testkmpapp.composeapp.generated.resources.Res
 import testkmpapp.composeapp.generated.resources.ic_xmark_circle
 
@@ -124,5 +126,19 @@ fun CloseCircleIconButton(
                 tint = tint
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SearchInputTextPreview() {
+    BooksTheme(
+        isDark = true
+    ) {
+        SearchInputText(
+            text = "",
+            onTextChange = {},
+            hint = "Search"
+        )
     }
 }

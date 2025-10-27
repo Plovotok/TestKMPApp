@@ -1,11 +1,20 @@
 package com.example.testkmpapp.presentation.home
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.childSlot
+import com.arkivanov.decompose.router.slot.dismiss
+import com.arkivanov.decompose.router.slot.navigate
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import com.example.testkmpapp.domain.models.BookPreview
+import com.example.testkmpapp.domain.models.Genre
 import com.example.testkmpapp.presentation.base.getViewModel
+import com.example.testkmpapp.presentation.filters.DefaultSearchFilerComponent
+import com.example.testkmpapp.presentation.filters.SearchFiltersComponent
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 
 class DefaultHomeComponent(
@@ -13,7 +22,31 @@ class DefaultHomeComponent(
     private val onBookClicked: (book: BookPreview) -> Unit
 ) : HomeComponent, ComponentContext by componentContext {
 
-    private val vm: MainViewModel = getViewModel { MainViewModel() }
+    private val vm: SearchViewModel = getViewModel { SearchViewModel() }
+
+    private val dialogNavigation = SlotNavigation<DialogConfig>()
+
+    override val filterDialog: Value<ChildSlot<*, SearchFiltersComponent>> =
+        childSlot(
+            source = dialogNavigation,
+            serializer = DialogConfig.serializer(),
+            handleBackButton = true
+        ) { config, context ->
+            DefaultSearchFilerComponent(
+                ctx = context,
+                currentGenres = vm.currentGenres,
+                onNewGenres = {
+                    vm.applyGenres(it)
+                },
+                onDismiss = {
+                    dialogNavigation.dismiss()
+                }
+            )
+        }
+
+    override fun showFiltersDialog() {
+        dialogNavigation.navigate { DialogConfig() }
+    }
 
     override val state: Value<HomeComponent.BooksState> = vm.state
 
@@ -36,5 +69,10 @@ class DefaultHomeComponent(
     }
 
     override fun getBooks(query: String) = vm.searchBooks(query)
+
+    @Serializable
+    private data class DialogConfig(
+        val activeGenres: List<Genre> = emptyList()
+    )
 
 }

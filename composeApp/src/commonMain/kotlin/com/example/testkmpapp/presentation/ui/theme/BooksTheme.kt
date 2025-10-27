@@ -48,7 +48,8 @@ private fun lightColorScheme() = AppColorScheme(
     error = Color(192, 0, 23),
     lightGrayTinted = Color(100, 100, 100),
     semiLightGrayTinted = Color(125, 125, 125),
-    textFieldBackground = Color(117, 117, 128, 31)
+    textFieldBackground = Color(117, 117, 128, 31),
+    sheetColor = Color.White
 )
 
 private fun darkColorScheme() = AppColorScheme(
@@ -58,5 +59,6 @@ private fun darkColorScheme() = AppColorScheme(
     error = Color(233, 17, 32),
     lightGrayTinted = Color(165, 165, 165),
     semiLightGrayTinted = Color(140, 140, 140),
-    textFieldBackground = Color(117, 117, 128, 61)
+    textFieldBackground = Color(117, 117, 128, 61),
+    sheetColor = Color(14, 14, 16)
 )

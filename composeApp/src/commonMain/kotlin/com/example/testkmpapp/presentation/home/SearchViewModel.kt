@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.BooksRepository
+import com.example.testkmpapp.domain.models.Genre
 import com.example.testkmpapp.presentation.Paginator
 import com.example.testkmpapp.presentation.base.BaseViewModel
 import kotlinx.coroutines.currentCoroutineContext
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainViewModel: BaseViewModel(), KoinComponent {
+class SearchViewModel: BaseViewModel(), KoinComponent {
 
     private val repository: BooksRepository by inject()
 
@@ -20,9 +21,12 @@ class MainViewModel: BaseViewModel(), KoinComponent {
 
     private val pageSize = 30
 
+    var currentGenres: List<Genre> = emptyList()
+        private set
+
     private fun getPaginator(
         query: String = "",
-        genres: List<String> = emptyList(),
+        genres: List<String> = currentGenres.map { it.requestName },
         authors: List<String> = emptyList()
     ) = Paginator(
         initialKey = 0,
@@ -75,6 +79,12 @@ class MainViewModel: BaseViewModel(), KoinComponent {
     )
 
     private var paginator: Paginator<Int, BookPagingResponse> = getPaginator()
+
+    fun applyGenres(genres: List<Genre>) {
+        currentGenres = genres
+        paginator = getPaginator("")
+        searchBooks("")
+    }
 
     init {
         loadNextItems()

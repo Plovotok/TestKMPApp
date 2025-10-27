@@ -38,7 +38,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.kotlinx.coroutines.android)
 
-            implementation("io.ktor:ktor-client-android:3.3.0")
+            implementation(libs.ktor.client.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -65,16 +65,16 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
 
-            implementation("io.coil-kt.coil3:coil-compose:3.3.0")
-            implementation("io.coil-kt.coil3:coil-network-ktor3:3.3.0")
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
 
             implementation(libs.compottie)
             implementation(libs.kmpalette.core)
 
-            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+            implementation(libs.compose.icons)
         }
         iosMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:3.3.0")
+            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

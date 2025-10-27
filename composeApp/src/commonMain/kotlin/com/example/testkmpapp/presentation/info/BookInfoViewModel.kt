@@ -27,10 +27,10 @@ class BookInfoViewModel(
             try {
                 state.update { it.copy(isLoading = true) }
                 val info = repository.getBookInfo(id)
-                state.update { it.copy(fullInfo = info, isLoading = false) }
+                state.update { it.copy(fullInfo = info, isLoading = false, error = null) }
             } catch (e: Exception) {
                 currentCoroutineContext().ensureActive()
-                state.update { it.copy(isLoading = false, error = e) }
+                state.update { it.copy(isLoading = false, error = e, fullInfo = null) }
             }
         }
     }

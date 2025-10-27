@@ -20,4 +20,5 @@ data class AppColorScheme(
     val lightGrayTinted: Color,
     val semiLightGrayTinted: Color,
     val textFieldBackground: Color,
+    val sheetColor: Color,
 )

@@ -1,11 +1,9 @@
 package com.example.testkmpapp.presentation.info
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.example.testkmpapp.domain.models.BookPreview
 import com.example.testkmpapp.presentation.base.getViewModel
-import com.example.testkmpapp.presentation.home.MainViewModel
 import org.koin.core.component.KoinComponent
 
 class DefaultBookInfoComponent(

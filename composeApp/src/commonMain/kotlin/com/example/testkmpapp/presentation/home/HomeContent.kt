@@ -1,6 +1,7 @@
 package com.example.testkmpapp.presentation.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.example.testkmpapp.presentation.description
+import com.example.testkmpapp.presentation.filters.SearchFilterContent
 import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.NoInternetScreen
@@ -45,6 +48,12 @@ fun HomeContent(
     modifier: Modifier = Modifier
 ) {
     val state by component.state.subscribeAsState()
+
+    val searchConfiguration by component.filterDialog.subscribeAsState()
+
+    searchConfiguration.child?.let {
+        SearchFilterContent(it.instance)
+    }
 
     BaseScreen(
         topBar = {
@@ -114,7 +123,7 @@ fun HomeContent(
                                     ),
                                 trailingContent = {
                                     IconButton(
-                                        onClick = {}
+                                        onClick = component::showFiltersDialog
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.FilterList,
