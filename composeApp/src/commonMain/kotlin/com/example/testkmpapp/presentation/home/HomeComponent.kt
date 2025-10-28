@@ -13,6 +13,7 @@ interface HomeComponent {
     val state: Value<BooksState>
 
     fun showBookInfo(book: BookPreview)
+    fun openFavorites()
 
     fun getBooks(query: String)
 
@@ -25,6 +26,7 @@ interface HomeComponent {
     val query: Value<String>
 
     fun onQueryChanged(newQuery: String)
+    fun removeBookFromFavorites(book: BookPreview)
 
     @Stable
     data class BooksState(
@@ -34,5 +36,6 @@ interface HomeComponent {
         val refreshError: Throwable? = null,
         val isAppending: Boolean = false,
         val appendError: Throwable? = null,
+        val favorites: List<Int> = emptyList(),
     )
 }

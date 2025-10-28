@@ -5,13 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,8 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -42,7 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.example.testkmpapp.presentation.ui.colorScheme
+import com.example.testkmpapp.presentation.ui.components.bottom_sheet.BottomSheetLayout
 import com.example.testkmpapp.presentation.ui.components.buttons.PrimaryButton
+import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
 import kotlinx.coroutines.launch
 
@@ -62,10 +57,8 @@ fun SearchFilterContent(
 
     val scope = rememberCoroutineScope()
 
-    ModalBottomSheet(
-        onDismissRequest = component::dismiss,
-        contentWindowInsets = { WindowInsets(0.dp) },
-        containerColor = colorScheme.sheetColor,
+    BottomSheetLayout(
+        onDismiss = component::dismiss,
         dragHandle = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -116,8 +109,6 @@ fun SearchFilterContent(
 
             val state by component.state.subscribeAsState()
 
-            val insets = WindowInsets.navigationBars.asPaddingValues()
-
             if (state.items.isNotEmpty()) {
                 Scaffold(
                     bottomBar = {
@@ -137,7 +128,7 @@ fun SearchFilterContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 20.dp)
-                                    .padding(bottom = insets.calculateBottomPadding())
+                                    .padding(bottom = it.calculateBottomPadding())
                             )
                         }
                     }
@@ -160,7 +151,7 @@ fun SearchFilterContent(
                                         if (isSelected) {
                                             Icon(
                                                 imageVector = Icons.Default.Check,
-                                                contentDescription = "Active",
+                                                contentDescription = "Active genre",
                                                 modifier = Modifier.size(22.dp),
                                                 tint = colorScheme.primary
                                             )
@@ -170,7 +161,7 @@ fun SearchFilterContent(
                                 headlineContent = {
                                     Text(
                                         text = it.displayName,
-                                        fontSize = 18.sp
+                                        fontSize = 14.sp
                                     )
                                 },
                                 colors = ListItemDefaults.colors(
@@ -185,23 +176,12 @@ fun SearchFilterContent(
                 }
             } else {
                 if (state.query.isNotBlank()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Genre \"${state.query}\" not found."
-                        )
-                    }
+                    EmptyScreen(
+                        title = "Not found",
+                        description = "Genre \"${state.query}\" not found."
+                    )
                 } else {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No genres."
-                        )
-                    }
+                    EmptyScreen(title = "No genres.")
                 }
             }
         }

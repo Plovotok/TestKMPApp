@@ -19,10 +19,23 @@ import kotlinx.serialization.builtins.serializer
 
 class DefaultHomeComponent(
     private val componentContext: ComponentContext,
-    private val onBookClicked: (book: BookPreview) -> Unit
+    private val onBookClicked: (book: BookPreview) -> Unit,
+    private val onFavorites: () -> Unit
 ) : HomeComponent, ComponentContext by componentContext {
 
     private val vm: SearchViewModel = getViewModel { SearchViewModel() }
+
+    private val savedQuery = stateKeeper.consume("query", String.serializer()) ?: ""
+
+    override val query: MutableValue<String> = MutableValue(savedQuery)
+
+    init {
+        stateKeeper.register("query", String.serializer()) { query.value }
+    }
+
+    override fun onQueryChanged(newQuery: String) {
+        query.update { newQuery }
+    }
 
     private val dialogNavigation = SlotNavigation<DialogConfig>()
 
@@ -53,20 +66,11 @@ class DefaultHomeComponent(
     override fun loadNext() = vm.loadNextItems()
 
     override fun showBookInfo(book: BookPreview) = onBookClicked(book)
+    override fun openFavorites() = onFavorites()
 
     override fun retry() = vm.retry()
 
-    private val savedQuery = stateKeeper.consume("query", String.serializer()) ?: ""
-
-    override val query: MutableValue<String> = MutableValue(savedQuery)
-
-    init {
-        stateKeeper.register("query", String.serializer()) { query.value }
-    }
-
-    override fun onQueryChanged(newQuery: String) {
-        query.update { newQuery }
-    }
+    override fun removeBookFromFavorites(book: BookPreview) = vm.removeBookFromFavorites(book)
 
     override fun getBooks(query: String) = vm.searchBooks(query)
 

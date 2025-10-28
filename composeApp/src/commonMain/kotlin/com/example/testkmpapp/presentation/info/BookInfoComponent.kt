@@ -13,8 +13,12 @@ interface BookInfoComponent {
     data class BookState(
         val fullInfo: BookPreview? = null,
         val isLoading: Boolean = true,
-        val error: Throwable? = null
+        val error: Throwable? = null,
+        val isFavorite: Boolean = false
     )
+
+    fun addBookToFavorites()
+    fun removeBookFromFavorites()
 
     fun getBookInfo()
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +52,7 @@ import com.example.testkmpapp.presentation.description
 import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.BookTopBar
-import com.example.testkmpapp.presentation.ui.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.components.screens.NoInternetScreen
 import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookInfoHeaderImage
 import com.example.testkmpapp.presentation.ui.components.StarRating
@@ -102,7 +104,6 @@ fun BookInfoContent(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                modifier = Modifier.fillMaxWidth()
                             ) {
                                 AsyncImage(
                                     model = component.preview.image,
@@ -128,11 +129,20 @@ fun BookInfoContent(
                             )
                         },
                         actions = {
+                            val isFavorite by remember {
+                                derivedStateOf { model.isFavorite }
+                            }
                             IconButton(
-                                onClick = {}
+                                onClick = {
+                                    if (isFavorite) {
+                                        component.removeBookFromFavorites()
+                                    } else {
+                                        component.addBookToFavorites()
+                                    }
+                                }
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.BookmarkBorder,
+                                    imageVector = if (!isFavorite) Icons.Default.BookmarkBorder else Icons.Default.Bookmark,
                                     contentDescription = "Add to favorite",
                                     tint = iconsColor
                                 )

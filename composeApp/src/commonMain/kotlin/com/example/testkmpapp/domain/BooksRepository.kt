@@ -3,8 +3,14 @@ package com.example.testkmpapp.domain
 import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.models.BookPreview
 import com.example.testkmpapp.domain.models.Genre
+import kotlinx.coroutines.flow.Flow
 
 interface BooksRepository {
+
+    fun getFavorites(): Flow<List<BookPreview>>
+
+    suspend fun addBookToFavorite(book: BookPreview)
+    suspend fun removeBookFromFavorite(book: BookPreview)
 
     suspend fun getBooks(
         query: String = "",
@@ -19,7 +25,7 @@ interface BooksRepository {
     fun getGenres(): List<Genre> = defaultGenres()
 
     companion object {
-        internal fun defaultGenres(): List<Genre> {
+        private fun defaultGenres(): List<Genre> {
             return listOf(
                 "action",
                 "adventure",

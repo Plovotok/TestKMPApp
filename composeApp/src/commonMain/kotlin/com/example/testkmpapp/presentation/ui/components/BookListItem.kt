@@ -15,6 +15,7 @@ import com.example.testkmpapp.domain.models.BookPreview
 fun BookListItem(
     book: BookPreview,
     onClick: () -> Unit,
+    trailingContent: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     ListItem(
@@ -37,6 +38,7 @@ fun BookListItem(
                 modifier = Modifier.size(64.dp)
             )
         },
+        trailingContent = trailingContent,
         modifier = modifier.clickable {
             onClick()
         }

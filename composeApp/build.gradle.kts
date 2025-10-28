@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +8,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -18,11 +22,14 @@ kotlin {
     
     listOf(
         iosArm64(),
+        iosX64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+
+//            linkerOpts.add("-lsqlite3")
 
             export(libs.decompose)
             export(libs.essenty.lifecycle)
@@ -39,6 +46,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
 
             implementation(libs.ktor.client.android)
+            implementation(libs.androidx.room.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -72,6 +80,10 @@ kotlin {
             implementation(libs.kmpalette.core)
 
             implementation(libs.compose.icons)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.sqlite)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -85,6 +97,10 @@ kotlin {
 android {
     namespace = "com.example.testkmpapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
         applicationId = "com.example.testkmpapp"
@@ -107,9 +123,60 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    dependencies {
+        ksp(libs.androidx.room.compiler)
+    }
+}
+
+project.afterEvaluate {
+    tasks.named("kspDebugKotlinAndroid") {
+        dependsOn(tasks.named("generateResourceAccessorsForAndroidDebug"))
+        enabled = false
+    }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+
+    kspCommonMainMetadata(libs.androidx.room.compiler)
 }
 
+project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+tasks.withType<com.google.devtools.ksp.gradle.KspAATask>().configureEach {
+    // This ensures that the resource generation task runs before KSP
+    dependsOn(
+        // Android
+        "generateActualResourceCollectorsForAndroidMain",
+        "generateResourceAccessorsForAndroidMain",
+        "generateActualResourceCollectorsForAndroidMain",
+        "generateComposeResClass",
+        "generateResourceAccessorsForCommonMain",
+        "generateExpectResourceCollectorsForCommonMain",
+        "generateResourceAccessorsForAndroidDebug",
+        // iOS
+        "generateResourceAccessorsForIosArm64Main",
+        "generateActualResourceCollectorsForIosArm64Main",
+        "generateResourceAccessorsForIosMain",
+        "generateResourceAccessorsForAppleMain",
+        "generateResourceAccessorsForNativeMain",
+    )
+}
+
+//kotlin.sourceSets.commonMain {
+//    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+//}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}

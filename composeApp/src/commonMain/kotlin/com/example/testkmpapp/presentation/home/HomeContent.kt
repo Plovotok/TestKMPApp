@@ -1,7 +1,6 @@
 package com.example.testkmpapp.presentation.home
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,22 +9,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +36,8 @@ import com.example.testkmpapp.presentation.description
 import com.example.testkmpapp.presentation.filters.SearchFilterContent
 import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
-import com.example.testkmpapp.presentation.ui.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.components.screens.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookListItem
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -57,8 +58,34 @@ fun HomeContent(
 
     BaseScreen(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text(text = "Books") },
+                actions = {
+                    BadgedBox(
+                        badge = {
+                            if (state.favorites.isNotEmpty()) {
+                                Badge(
+                                    modifier = Modifier.padding(end = 16.dp)
+                                ) {
+                                    Text(state.favorites.size.toString())
+                                }
+                            }
+                        },
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        IconButton(
+                            onClick = {
+                                component.openFavorites()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.BookmarkBorder,
+                                contentDescription = "Go to favorites",
+                                tint = colorScheme.primary
+                            )
+                        }
+                    }
+                },
             )
         },
         modifier = modifier
@@ -121,6 +148,7 @@ fun HomeContent(
                                     .padding(
                                         vertical = 6.dp
                                     ),
+                                isEnabled = false,
                                 trailingContent = {
                                     IconButton(
                                         onClick = component::showFiltersDialog
@@ -138,8 +166,28 @@ fun HomeContent(
                             )
                         }
                         items(state.books) { book ->
+                            val isFavorite by remember {
+                                derivedStateOf {
+                                    state.favorites.contains(book.id)
+                                }
+                            }
                             BookListItem(
                                 book = book,
+                                trailingContent = {
+                                    if (isFavorite) {
+                                        IconButton(
+                                            onClick = {
+                                                component.removeBookFromFavorites(book)
+                                            }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Bookmark,
+                                                contentDescription = "Add to favorite",
+                                                tint = colorScheme.primary
+                                            )
+                                        }
+                                    }
+                                },
                                 onClick = {
                                     component.showBookInfo(book)
                                 }

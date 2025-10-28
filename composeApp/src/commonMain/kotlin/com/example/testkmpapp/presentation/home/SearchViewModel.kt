@@ -2,8 +2,9 @@ package com.example.testkmpapp.presentation.home
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
-import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.BooksRepository
+import com.example.testkmpapp.domain.models.BookPagingResponse
+import com.example.testkmpapp.domain.models.BookPreview
 import com.example.testkmpapp.domain.models.Genre
 import com.example.testkmpapp.presentation.Paginator
 import com.example.testkmpapp.presentation.base.BaseViewModel
@@ -18,6 +19,14 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
     private val repository: BooksRepository by inject()
 
     val state: MutableValue<HomeComponent.BooksState> = MutableValue(HomeComponent.BooksState())
+
+    init {
+        repository.getFavorites().collectInViewModel { list ->
+            state.update {
+                it.copy(favorites = list.map { it.id })
+            }
+        }
+    }
 
     private val pageSize = 30
 
@@ -91,6 +100,9 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
     }
 
     fun searchBooks(query: String) {
+        state.update {
+            it.copy(books = emptyList(), isRefreshing = true, refreshError = null, isAppending = false, appendError = null)
+        }
         paginator = getPaginator(query)
         loadNextItems()
     }
@@ -104,6 +116,17 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
     fun retry() {
         viewModelScope.launch {
             paginator.retry()
+        }
+    }
+
+    fun removeBookFromFavorites(book: BookPreview) {
+        viewModelScope.launch {
+            try {
+                repository.removeBookFromFavorite(book)
+            } catch (e: Throwable) {
+                ensureActive()
+                e.printStackTrace()
+            }
         }
     }
 }
