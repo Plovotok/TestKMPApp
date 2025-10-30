@@ -125,7 +125,8 @@ fun SearchFilterContent(
                                     .padding(bottom = it.calculateBottomPadding() + 8.dp)
                             )
                         }
-                    }
+                    },
+                    containerColor = Color.Transparent
                 ) {
                     LazyVerticalGrid(
                         modifier = Modifier

@@ -1,7 +1,7 @@
 package com.example.testkmpapp.di
 
 import androidx.room.RoomDatabase
-import com.example.myapplication.JVMPlatform
+import com.example.testkmpapp.JVMPlatform
 import com.example.testkmpapp.Platform
 import com.example.testkmpapp.db.AppDatabase
 import com.example.testkmpapp.db.getDatabaseBuilder
