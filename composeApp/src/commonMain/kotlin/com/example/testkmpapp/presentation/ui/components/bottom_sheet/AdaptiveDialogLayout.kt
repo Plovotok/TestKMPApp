@@ -22,7 +22,14 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,24 +38,30 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.window.core.layout.WindowSizeClass
 import com.example.testkmpapp.presentation.ui.colorScheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdaptiveDialogLayout(
     onDismiss: () -> Unit,
+    state: AdaptiveDialogState = rememberAdaptiveDialogState(),
     actions: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.(PaddingValues) -> Unit,
 ) {
     val size = currentWindowAdaptiveInfo().windowSizeClass
 
-    LaunchedEffect(size) {
-        println("size = $size")
-    }
-
     val isDialog = size.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) &&
             size.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)
 
+    val scope = rememberCoroutineScope()
     if (isDialog) {
+        DisposableEffect(Unit) {
+            state.setVisibility(true)
+
+            onDispose {
+                state.setVisibility(false)
+            }
+        }
         Dialog(
             onDismissRequest = onDismiss,
             properties = DialogProperties(),
@@ -73,7 +86,17 @@ fun AdaptiveDialogLayout(
             }
         }
     } else {
-        val sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+        DisposableEffect(Unit) {
+            scope.launch {
+                state.setVisibility(true)
+                state.sheetState.show()
+            }
+
+            onDispose {
+                state.setVisibility(false)
+            }
+        }
 
         ModalBottomSheet(
             onDismissRequest = onDismiss,
@@ -95,10 +118,33 @@ fun AdaptiveDialogLayout(
                     }
                 }
             },
-            sheetState = sheetState,
+            sheetState = state.sheetState,
         ) {
             val insets = WindowInsets.systemBars.asPaddingValues()
             content(insets)
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun rememberAdaptiveDialogState(): AdaptiveDialogState {
+    val sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    return remember {
+        AdaptiveDialogState(sheetState)
+    }
+}
+
+@Stable
+@OptIn(ExperimentalMaterial3Api::class)
+class AdaptiveDialogState(
+    internal val sheetState: SheetState
+) {
+    var isVisible: Boolean by mutableStateOf(false)
+        private set
+
+    fun setVisibility(visible: Boolean) {
+        isVisible = visible
+    }
+    suspend fun dismiss() = sheetState.hide()
 }

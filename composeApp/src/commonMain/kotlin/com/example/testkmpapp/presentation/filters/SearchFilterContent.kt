@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.bottom_sheet.AdaptiveDialogLayout
+import com.example.testkmpapp.presentation.ui.components.bottom_sheet.rememberAdaptiveDialogState
 import com.example.testkmpapp.presentation.ui.components.buttons.PrimaryButton
 import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
@@ -46,14 +47,21 @@ fun SearchFilterContent(
     component: SearchFiltersComponent
 ) {
 
-    fun dismiss() {
+    val dialogState = rememberAdaptiveDialogState()
+
+    suspend fun dismiss() {
+        dialogState.dismiss()
         component.dismiss()
     }
 
     val scope = rememberCoroutineScope()
 
     AdaptiveDialogLayout(
-        onDismiss = component::dismiss,
+        onDismiss = {
+            scope.launch {
+                dismiss()
+            }
+        },
         actions = {
             IconButton(
                 onClick = {

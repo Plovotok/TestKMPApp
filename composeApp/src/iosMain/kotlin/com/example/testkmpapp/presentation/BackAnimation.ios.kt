@@ -11,6 +11,6 @@ actual fun getPredictiveBackAnimatable(
     initialBackEvent: BackEvent
 ): PredictiveBackAnimatable = predictiveBackAnimatable(
     initialBackEvent = initialBackEvent,
-    exitModifier = { progress, edge -> if (edge == BackEvent.SwipeEdge.LEFT) Modifier.slideExitModifier(progress = progress) else Modifier },
+    exitModifier = { progress, edge -> Modifier.slideExitModifier(progress = progress) },
     enterModifier = { progress, _ -> Modifier.slideEnterModifier(progress = progress) },
 )
