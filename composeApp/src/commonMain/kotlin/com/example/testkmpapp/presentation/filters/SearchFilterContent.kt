@@ -122,7 +122,7 @@ fun SearchFilterContent(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 20.dp)
-                                    .padding(bottom = it.calculateBottomPadding())
+                                    .padding(bottom = it.calculateBottomPadding() + 8.dp)
                             )
                         }
                     }

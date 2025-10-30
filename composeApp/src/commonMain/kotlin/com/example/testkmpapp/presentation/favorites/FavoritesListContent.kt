@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItemDefaults
@@ -32,6 +33,7 @@ import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.BookTopBar
 import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookListItem
+import com.example.testkmpapp.presentation.ui.components.buttons.ScrollToTopButton
 import com.example.testkmpapp.presentation.ui.components.icons.BackButton
 import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
@@ -88,26 +90,36 @@ fun FavoritesListContent(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     if (state.filtered.isNotEmpty()) {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(bottom = it.calculateBottomPadding()),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            items(state.filtered, key = { it.id }) {
-                                BookListItem(
-                                    book = it,
-                                    onClick = {
-                                        component.onBookClicked(it)
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .animateItem()
-                                    ,
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = if (it.id == activeBookId) colorScheme.semiLightGrayTinted.copy(alpha = 0.4f) else Color.Unspecified
-                                    ),
-                                )
+                        Box {
+                            val scrollState = rememberLazyListState()
+                            LazyColumn(
+                                state = scrollState,
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(bottom = it.calculateBottomPadding()),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                items(state.filtered, key = { it.id }) {
+                                    BookListItem(
+                                        book = it,
+                                        onClick = {
+                                            component.onBookClicked(it)
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .animateItem(),
+                                        colors = ListItemDefaults.colors(
+                                            containerColor = if (it.id == activeBookId) colorScheme.semiLightGrayTinted.copy(
+                                                alpha = 0.4f
+                                            ) else Color.Unspecified
+                                        ),
+                                    )
+                                }
                             }
+
+                            ScrollToTopButton(
+                                scrollState = scrollState,
+                                verticalPadding = it.calculateBottomPadding() + 16.dp
+                            )
                         }
                     } else {
                         EmptyScreen(

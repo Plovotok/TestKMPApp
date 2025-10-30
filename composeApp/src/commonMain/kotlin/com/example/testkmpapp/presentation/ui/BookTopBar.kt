@@ -56,6 +56,6 @@ object BookTopbarDefaults {
     fun colors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(
         containerColor = MaterialTheme.colorScheme.surface,
         navigationIconContentColor = colorScheme.primary,
-        actionIconContentColor = colorScheme.primary
+        actionIconContentColor = colorScheme.primary,
     )
 }

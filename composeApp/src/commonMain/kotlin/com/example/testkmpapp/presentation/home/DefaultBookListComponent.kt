@@ -20,6 +20,7 @@ import kotlinx.serialization.builtins.serializer
 class DefaultBookListComponent(
     private val componentContext: ComponentContext,
     private val onBookClicked: (book: BookPreview) -> Unit,
+    private val onCloseDetails: () -> Unit,
     private val onFavorites: () -> Unit
 ): BookListComponent, ComponentContext by componentContext {
 
@@ -52,6 +53,7 @@ class DefaultBookListComponent(
                 currentGenres = config.activeGenres,
                 onNewGenres = {
                     vm.searchBooks("", it)
+                    onCloseDetails()
                 },
                 onDismiss = {
                     dialogNavigation.dismiss()

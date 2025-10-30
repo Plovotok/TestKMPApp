@@ -43,6 +43,11 @@ class DefaultHomeComponent(
                     state.copy(details = BookInfo(it))
                 }
             },
+            onCloseDetails = {
+                navigation.navigate { state ->
+                    state.copy(details = null)
+                }
+            },
             onFavorites = onFavorites
         )
 

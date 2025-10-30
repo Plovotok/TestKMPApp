@@ -47,6 +47,7 @@ import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.BookTopBar
 import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookListItem
+import com.example.testkmpapp.presentation.ui.components.buttons.ScrollToTopButton
 import com.example.testkmpapp.presentation.ui.components.screens.NoInternetScreen
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -83,7 +84,7 @@ fun BookListContent(
                                 }
                             }
                         },
-                        modifier = Modifier.padding(end = 8.dp)
+                        modifier = Modifier.padding(end = 12.dp)
                     ) {
                         IconButton(
                             onClick = {
@@ -144,85 +145,101 @@ fun BookListContent(
 
                     val query by component.query.subscribeAsState()
 
-                    LazyColumn(
-                        contentPadding = it,
-                        state = listState,
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        item {
-                            SearchInputText(
-                                text = query,
-                                onTextChange = component::onQueryChanged,
-                                hint = "eg. Harry Potter",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 16.dp)
-                                    .padding(
-                                        vertical = 6.dp
-                                    ),
-                                isEnabled = false,
-                                trailingContent = {
-                                    IconButton(
-                                        onClick = component::showFiltersDialog
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.FilterList,
-                                            contentDescription = "Filters",
-                                            modifier = Modifier.size(24.dp),
-                                            tint = if (activeGenres.isNotEmpty()) colorScheme.primary else colorScheme.onBackground
-                                        )
-                                    }
-                                },
-                                onSearch = {
+                    Box {
 
-                                }
-                            )
-                        }
-                        items(state.books) { book ->
-                            val isFavorite by remember {
-                                derivedStateOf {
-                                    state.favorites.contains(book.id)
-                                }
-                            }
-                            BookListItem(
-                                book = book,
-                                trailingContent = {
-                                    if (isFavorite) {
+                        LazyColumn(
+                            contentPadding = it,
+                            state = listState,
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            item {
+                                SearchInputText(
+                                    text = query,
+                                    onTextChange = component::onQueryChanged,
+                                    hint = "eg. Harry Potter",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 16.dp)
+                                        .padding(
+                                            vertical = 6.dp
+                                        ),
+                                    isEnabled = false,
+                                    trailingContent = {
                                         IconButton(
-                                            onClick = {
-                                                component.removeBookFromFavorites(book)
-                                            }
+                                            onClick = component::showFiltersDialog,
+                                            modifier = Modifier.padding(end = 16.dp)
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Bookmark,
-                                                contentDescription = "Add to favorite",
-                                                tint = colorScheme.primary
+                                                imageVector = Icons.Default.FilterList,
+                                                contentDescription = "Filters",
+                                                modifier = Modifier.size(24.dp),
+                                                tint = if (activeGenres.isNotEmpty()) colorScheme.primary else colorScheme.onBackground
                                             )
                                         }
+                                    },
+                                    onSearch = {
+
                                     }
-                                },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = if (book.id == activeBookId) colorScheme.semiLightGrayTinted.copy(alpha = 0.4f) else Color.Unspecified
-                                ),
-                                onClick = {
-                                    component.showBookInfo(book)
-                                }
-                            )
-                        }
-                        if (state.isAppending) {
-                            item {
-                                CircularProgressIndicator(modifier = Modifier.size(28.dp))
+                                )
                             }
-                        } else if (state.appendError != null) {
-                            item {
-                                TextButton(
-                                    onClick = component::retry
-                                ) {
-                                    Text(text = "Retry")
+                            items(state.books) { book ->
+                                val isFavorite by remember {
+                                    derivedStateOf {
+                                        state.favorites.contains(book.id)
+                                    }
+                                }
+                                BookListItem(
+                                    book = book,
+                                    trailingContent = {
+                                        Box(
+                                            modifier = Modifier.size(48.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            if (isFavorite) {
+                                                IconButton(
+                                                    onClick = {
+                                                        component.removeBookFromFavorites(book)
+                                                    }
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Bookmark,
+                                                        contentDescription = "Add to favorite",
+                                                        tint = colorScheme.primary
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    },
+                                    colors = ListItemDefaults.colors(
+                                        containerColor = if (book.id == activeBookId) colorScheme.semiLightGrayTinted.copy(
+                                            alpha = 0.4f
+                                        ) else Color.Unspecified
+                                    ),
+                                    onClick = {
+                                        component.showBookInfo(book)
+                                    }
+                                )
+                            }
+                            if (state.isAppending) {
+                                item {
+                                    CircularProgressIndicator(modifier = Modifier.size(28.dp))
+                                }
+                            } else if (state.appendError != null) {
+                                item {
+                                    TextButton(
+                                        onClick = component::retry
+                                    ) {
+                                        Text(text = "Retry")
+                                    }
                                 }
                             }
                         }
+
+                        ScrollToTopButton(
+                            scrollState = listState,
+                            verticalPadding = it.calculateBottomPadding() + 16.dp
+                        )
                     }
                 }
             }
