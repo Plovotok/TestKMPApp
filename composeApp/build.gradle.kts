@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.composeHotReload)
 
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
@@ -19,6 +20,8 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
+
+    jvm()
     
     listOf(
         iosArm64(),
@@ -84,13 +87,19 @@ kotlin {
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.androidx.sqlite)
 
-            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0-alpha06")
+            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0-beta01")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.apache)
         }
     }
 }
@@ -142,4 +151,38 @@ dependencies {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.example.testkmpapp.MainKt"
+
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("compose-desktop.pro"))
+        }
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "Books"
+            packageVersion = "1.0.0"
+
+            this.vendor = "Plovotok"
+            this.description = "Test Compose Multiplatform application"
+            this.copyright = "© 2024 Plovotok. All rights reserved"
+            this.licenseFile.set(project.file("LICENSE.txt"))
+
+            macOS {
+                this.dockName = "Books"
+                this.appCategory = "public.app-category.developer-tools"
+                this.bundleID = "com.example.testkmpapp"
+                iconFile.set(project.file("books-icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("icon.png"))
+            }
+        }
+    }
 }
