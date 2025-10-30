@@ -33,13 +33,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     var backDispatcher: BackDispatcher = BackDispatcherKt.BackDispatcher()
     
-    func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
-            StateKeeperUtilsKt.save(coder: coder, state: stateKeeper.save())
-            return true
-        }
-        
-        func application(_ application: UIApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
-    //        stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: StateKeeperUtilsKt.restore(coder: coder))
-            return true
-        }
+    // func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
+    //         StateKeeperUtilsKt.save(coder: coder, state: stateKeeper.save())
+    //         return true
+    //     }
+    //
+    //     func application(_ application: UIApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
+    // //        stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: StateKeeperUtilsKt.restore(coder: coder))
+    //         return true
+    //     }
 }
