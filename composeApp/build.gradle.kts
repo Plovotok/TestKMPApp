@@ -158,6 +158,7 @@ compose.desktop {
         mainClass = "com.example.testkmpapp.MainKt"
 
         buildTypes.release.proguard {
+            obfuscate = true
             configurationFiles.from(project.file("compose-desktop.pro"))
         }
 

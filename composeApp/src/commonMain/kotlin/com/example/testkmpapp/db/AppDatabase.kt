@@ -24,6 +24,8 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }
 
+internal val DATABASE_NAME = "favorites.db"
+
 interface DB {
     fun clearAllTables()
 }

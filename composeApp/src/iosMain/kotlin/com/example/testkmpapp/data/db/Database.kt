@@ -3,13 +3,14 @@ package com.example.testkmpapp.data.db
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.testkmpapp.db.AppDatabase
+import com.example.testkmpapp.db.DATABASE_NAME
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
 fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
-    val dbFilePath = documentDirectory() + "/my_room.db"
+    val dbFilePath = documentDirectory() + "/$DATABASE_NAME"
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,
     )
