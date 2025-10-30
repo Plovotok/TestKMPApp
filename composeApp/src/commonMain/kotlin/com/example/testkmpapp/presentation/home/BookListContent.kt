@@ -49,7 +49,9 @@ import com.example.testkmpapp.presentation.ui.BookTopBar
 import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookListItem
 import com.example.testkmpapp.presentation.ui.components.buttons.ScrollToTopButton
+import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import com.example.testkmpapp.presentation.ui.components.screens.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.components.text_field.CloseCircleIconButton
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -142,7 +144,6 @@ fun BookListContent(
                                     .padding(
                                         vertical = 6.dp
                                     ),
-                                isEnabled = false,
                                 trailingContent = {
                                     IconButton(
                                         onClick = component::showFiltersDialog,
@@ -155,6 +156,15 @@ fun BookListContent(
                                             tint = if (activeGenres.isNotEmpty()) colorScheme.primary else colorScheme.onBackground
                                         )
                                     }
+                                },
+                                trailingIcon = {
+                                    CloseCircleIconButton(
+                                        visible = query.isNotEmpty(),
+                                        onClick = {
+                                            component.onQueryChanged("")
+                                            component.getBooks("")
+                                        }
+                                    )
                                 },
                                 onSearch = {
                                     component.getBooks(query)
@@ -184,27 +194,132 @@ fun BookListContent(
                 }
 
                 else -> {
-                    val listState = rememberLazyListState()
+                    if (state.books.isNotEmpty()) {
 
-                    LaunchedEffect(state.books) {
-                        snapshotFlow {
-                            (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1) >= state.books.lastIndex - 4
-                        }.distinctUntilChanged().collect { shouldLoad ->
-                            if (shouldLoad) {
-                                component.loadNext()
+                        val listState = rememberLazyListState()
+
+                        LaunchedEffect(state.books) {
+                            snapshotFlow {
+                                (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                                    ?: -1) >= state.books.lastIndex - 4
+                            }.distinctUntilChanged().collect { shouldLoad ->
+                                if (shouldLoad) {
+                                    component.loadNext()
+                                }
                             }
                         }
-                    }
 
-                    Box {
+                        Box {
 
-                        LazyColumn(
-                            contentPadding = it,
-                            state = listState,
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            LazyColumn(
+                                contentPadding = it,
+                                state = listState,
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                item {
+                                    SearchInputText(
+                                        text = query,
+                                        onTextChange = component::onQueryChanged,
+                                        hint = "eg. Harry Potter",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = 16.dp)
+                                            .padding(
+                                                vertical = 6.dp
+                                            ),
+                                        trailingContent = {
+                                            IconButton(
+                                                onClick = component::showFiltersDialog,
+                                                modifier = Modifier.padding(end = 16.dp)
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.FilterList,
+                                                    contentDescription = "Filters",
+                                                    modifier = Modifier.size(24.dp),
+                                                    tint = if (activeGenres.isNotEmpty()) colorScheme.primary else colorScheme.onBackground
+                                                )
+                                            }
+                                        },
+                                        trailingIcon = {
+                                            CloseCircleIconButton(
+                                                visible = query.isNotEmpty(),
+                                                onClick = {
+                                                    component.onQueryChanged("")
+                                                    component.getBooks("")
+                                                }
+                                            )
+                                        },
+                                        onSearch = {
+                                            component.getBooks(query)
+                                        }
+                                    )
+                                }
+                                items(state.books) { book ->
+                                    val isFavorite by remember {
+                                        derivedStateOf {
+                                            state.favorites.contains(book.id)
+                                        }
+                                    }
+                                    BookListItem(
+                                        book = book,
+                                        trailingContent = {
+                                            Box(
+                                                modifier = Modifier.size(48.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                if (isFavorite) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            component.removeBookFromFavorites(book)
+                                                        }
+                                                    ) {
+                                                        Icon(
+                                                            imageVector = Icons.Default.Bookmark,
+                                                            contentDescription = "Add to favorite",
+                                                            tint = colorScheme.primary
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        colors = ListItemDefaults.colors(
+                                            containerColor = if (book.id == activeBookId) colorScheme.semiLightGrayTinted.copy(
+                                                alpha = 0.4f
+                                            ) else Color.Unspecified
+                                        ),
+                                        onClick = {
+                                            component.showBookInfo(book)
+                                        }
+                                    )
+                                }
+                                if (state.isAppending) {
+                                    item {
+                                        CircularProgressIndicator(modifier = Modifier.size(28.dp))
+                                    }
+                                } else if (state.appendError != null) {
+                                    item {
+                                        TextButton(
+                                            onClick = component::retry
+                                        ) {
+                                            Text(text = "Retry")
+                                        }
+                                    }
+                                }
+                            }
+
+                            ScrollToTopButton(
+                                scrollState = listState,
+                                verticalPadding = it.calculateBottomPadding() + 16.dp
+                            )
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = it.calculateTopPadding())
                         ) {
-                            item {
+                            if (shouldShowSearchFieldInError) {
                                 SearchInputText(
                                     text = query,
                                     onTextChange = component::onQueryChanged,
@@ -215,7 +330,6 @@ fun BookListContent(
                                         .padding(
                                             vertical = 6.dp
                                         ),
-                                    isEnabled = false,
                                     trailingContent = {
                                         IconButton(
                                             onClick = component::showFiltersDialog,
@@ -229,68 +343,27 @@ fun BookListContent(
                                             )
                                         }
                                     },
-                                    onSearch = {
-
-                                    }
-                                )
-                            }
-                            items(state.books) { book ->
-                                val isFavorite by remember {
-                                    derivedStateOf {
-                                        state.favorites.contains(book.id)
-                                    }
-                                }
-                                BookListItem(
-                                    book = book,
-                                    trailingContent = {
-                                        Box(
-                                            modifier = Modifier.size(48.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            if (isFavorite) {
-                                                IconButton(
-                                                    onClick = {
-                                                        component.removeBookFromFavorites(book)
-                                                    }
-                                                ) {
-                                                    Icon(
-                                                        imageVector = Icons.Default.Bookmark,
-                                                        contentDescription = "Add to favorite",
-                                                        tint = colorScheme.primary
-                                                    )
-                                                }
+                                    trailingIcon = {
+                                        CloseCircleIconButton(
+                                            visible = query.isNotEmpty(),
+                                            onClick = {
+                                                component.onQueryChanged("")
+                                                component.getBooks("")
                                             }
-                                        }
+                                        )
                                     },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = if (book.id == activeBookId) colorScheme.semiLightGrayTinted.copy(
-                                            alpha = 0.4f
-                                        ) else Color.Unspecified
-                                    ),
-                                    onClick = {
-                                        component.showBookInfo(book)
+                                    onSearch = {
+                                        component.getBooks(query)
                                     }
                                 )
                             }
-                            if (state.isAppending) {
-                                item {
-                                    CircularProgressIndicator(modifier = Modifier.size(28.dp))
-                                }
-                            } else if (state.appendError != null) {
-                                item {
-                                    TextButton(
-                                        onClick = component::retry
-                                    ) {
-                                        Text(text = "Retry")
-                                    }
-                                }
-                            }
-                        }
 
-                        ScrollToTopButton(
-                            scrollState = listState,
-                            verticalPadding = it.calculateBottomPadding() + 16.dp
-                        )
+                            EmptyScreen(
+                                title = "Not found",
+                                description = "Book \"${state.query}\" is not found.",
+                                modifier = Modifier.padding(horizontal = 40.dp)
+                            )
+                        }
                     }
                 }
             }

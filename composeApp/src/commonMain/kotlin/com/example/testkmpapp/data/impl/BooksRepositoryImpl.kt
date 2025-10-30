@@ -60,6 +60,11 @@ class BooksRepositoryImpl(
                 put("number", number.toString())
                 put("offset", offset.toString())
                 put("api-key", Constants.BOOKS_API_KEY)
+                if (query.isNotBlank()) {
+                    query.trim().let {
+                        put("query", it.replace(" ", "+"))
+                    }
+                }
                 if (genres.isNotEmpty()) {
                     put("genres", genres.joinToString(","){ it } )
                 }

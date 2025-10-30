@@ -95,7 +95,7 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
     fun searchBooks(query: String, genres: List<Genre>) {
         currentGenres.update { genres }
         state.update {
-            it.copy(books = emptyList(), isRefreshing = true, refreshError = null, isAppending = false, appendError = null)
+            it.copy(query = query, books = emptyList(), isRefreshing = true, refreshError = null, isAppending = false, appendError = null)
         }
         paginator = getPaginator(
             query,
