@@ -85,9 +85,7 @@ fun FavoritesContent(
                     dualWeights = Pair(first = 0.45F, second = 0.55F),
                 ),
                 secondPanelPlaceholder = {
-                    EmptyScreen(
-                        title = "Choose book from list"
-                    )
+                    EmptyScreen(title = "Choose book from list")
                 },
                 animators = ChildPanelsAnimators(
                     single = iosLikeSlideExperimental(),

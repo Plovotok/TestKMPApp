@@ -1,6 +1,7 @@
 package com.example.testkmpapp.presentation.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -105,6 +106,14 @@ fun BookListContent(
         modifier = modifier
     ) {
 
+        val query by component.query.subscribeAsState()
+
+        val shouldShowSearchFieldInError by remember {
+            derivedStateOf {
+                state.query.isNotBlank() || activeGenres.isNotEmpty()
+            }
+        }
+
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
@@ -117,16 +126,60 @@ fun BookListContent(
                 state.refreshError != null -> {
                     val isInternetError = state.refreshError.isInternetError()
 
-                    if (isInternetError) {
-                        NoInternetScreen(
-                            onRefresh = component::retry
-                        )
-                    } else {
-                        Text(
-                            text = state.refreshError!!.description() ?: "Something went wrong :(",
-                            modifier = Modifier.padding(horizontal = 40.dp),
-                            textAlign = TextAlign.Center
-                        )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = it.calculateTopPadding())
+                    ) {
+                        if (shouldShowSearchFieldInError) {
+                            SearchInputText(
+                                text = query,
+                                onTextChange = component::onQueryChanged,
+                                hint = "eg. Harry Potter",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp)
+                                    .padding(
+                                        vertical = 6.dp
+                                    ),
+                                isEnabled = false,
+                                trailingContent = {
+                                    IconButton(
+                                        onClick = component::showFiltersDialog,
+                                        modifier = Modifier.padding(end = 16.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.FilterList,
+                                            contentDescription = "Filters",
+                                            modifier = Modifier.size(24.dp),
+                                            tint = if (activeGenres.isNotEmpty()) colorScheme.primary else colorScheme.onBackground
+                                        )
+                                    }
+                                },
+                                onSearch = {
+                                    component.getBooks(query)
+                                }
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ){
+
+                            if (isInternetError) {
+                                NoInternetScreen(
+                                    onRefresh = component::retry
+                                )
+                            } else {
+                                Text(
+                                    text = state.refreshError!!.description()
+                                        ?: "Something went wrong :(",
+                                    modifier = Modifier.padding(horizontal = 40.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -142,8 +195,6 @@ fun BookListContent(
                             }
                         }
                     }
-
-                    val query by component.query.subscribeAsState()
 
                     Box {
 

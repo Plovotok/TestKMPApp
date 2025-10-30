@@ -7,9 +7,7 @@ import io.ktor.http.HttpStatusCode
 expect fun Throwable?.isInternetError(): Boolean
 
 fun Throwable?.shortDescription(): String? = when  {
-    isNotFoundError() -> {
-        "Not found"
-    }
+    isNotFoundError() -> "Not found"
     this is ResponseException -> {
         if (this.response.status.value == 402) {
             "Your daily points limit of 50 has been reached"
@@ -21,9 +19,7 @@ fun Throwable?.shortDescription(): String? = when  {
 }
 
 fun Throwable?.description(): String? = when {
-    isNotFoundError() -> {
-        "Not found"
-    }
+    isNotFoundError() -> "Not found"
     this is ResponseException -> {
         if (this.response.status.value == 402) {
             "Your daily points limit of 50 has been reached. Please upgrade your plan to continue using the API."
