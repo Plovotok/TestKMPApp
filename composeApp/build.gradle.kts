@@ -111,7 +111,7 @@ val patch = 0
 val appVersionName = "1.0.0"
 
 android {
-    namespace = "com.example.testkmpapp"
+    namespace = "ru.plovotok.testkmpapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -119,7 +119,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.example.testkmpapp"
+        applicationId = "ru.plovotok.testkmpapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = major * 10_000 + minor * 100 + patch
@@ -161,7 +161,7 @@ room {
 
 compose.desktop {
     application {
-        mainClass = "com.example.testkmpapp.MainKt"
+        mainClass = "ru.plovotok.testkmpapp.MainKt"
 
         buildTypes.release.proguard {
             obfuscate = true
@@ -181,7 +181,7 @@ compose.desktop {
             macOS {
                 this.dockName = "Books"
                 this.appCategory = "public.app-category.books"
-                this.bundleID = "com.example.testkmpapp"
+                this.bundleID = "ru.plovotok.testkmpapp"
                 iconFile.set(project.file("books-icon.icns"))
             }
             windows {
