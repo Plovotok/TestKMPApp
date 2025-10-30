@@ -104,6 +104,12 @@ kotlin {
     }
 }
 
+val major = 1
+val minor = 0
+val patch = 0
+
+val appVersionName = "1.0.0"
+
 android {
     namespace = "com.example.testkmpapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -116,8 +122,8 @@ android {
         applicationId = "com.example.testkmpapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = major * 10_000 + minor * 100 + patch
+        versionName = appVersionName
     }
     packaging {
         resources {
@@ -126,7 +132,7 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -165,7 +171,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Books"
-            packageVersion = "1.0.0"
+            packageVersion = appVersionName
 
             this.vendor = "Plovotok"
             this.description = "Test Compose Multiplatform application"
@@ -179,7 +185,11 @@ compose.desktop {
                 iconFile.set(project.file("books-icon.icns"))
             }
             windows {
-                iconFile.set(project.file("icon.ico"))
+                iconFile.set(project.file("books-icon.ico"))
+                dirChooser = true
+                perUserInstall = true
+                menu = true
+                shortcut = true
             }
             linux {
                 iconFile.set(project.file("icon.png"))
