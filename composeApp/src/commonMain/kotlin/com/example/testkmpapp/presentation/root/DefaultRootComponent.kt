@@ -8,10 +8,13 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.example.testkmpapp.domain.models.BookPreview
+import com.example.testkmpapp.presentation.favorites.DefaultFavoritesComponent
+import com.example.testkmpapp.presentation.favorites.FavoritesComponent
 import com.example.testkmpapp.presentation.home.DefaultHomeComponent
 import com.example.testkmpapp.presentation.home.HomeComponent
 import com.example.testkmpapp.presentation.info.DefaultBookInfoComponent
 import com.example.testkmpapp.presentation.info.BookInfoComponent
+import com.example.testkmpapp.presentation.root.RootComponent.Child.*
 import kotlinx.serialization.Serializable
 
 class DefaultRootComponent(
@@ -31,23 +34,22 @@ class DefaultRootComponent(
 
     private fun child(config: Config, childComponentContext: ComponentContext): RootComponent.Child =
         when (config) {
-            is Config.Home -> RootComponent.Child.Home(homeComponent(childComponentContext))
-            is Config.BookInfo -> RootComponent.Child.BookInfo(bookInfoComponent(config.preview, childComponentContext))
+            is Config.Home -> Home(homeComponent(childComponentContext))
+            is Config.Favorites -> Favorites(favoritesComponent(childComponentContext))
         }
 
     private fun homeComponent(componentContext: ComponentContext): HomeComponent =
         DefaultHomeComponent(
             componentContext = componentContext,
-            onBookClicked = {
-                navigation.pushNew(Config.BookInfo(it))
+            onFavorites = {
+                navigation.pushNew(Config.Favorites)
             }
         )
 
-    private fun bookInfoComponent(preview: BookPreview, componentContext: ComponentContext): BookInfoComponent =
-        DefaultBookInfoComponent(
-            preview = preview,
+    private fun favoritesComponent(componentContext: ComponentContext): FavoritesComponent =
+        DefaultFavoritesComponent(
             componentContext = componentContext,
-            onGoBack = ::onBack
+            onBack = ::onBack
         )
 
     override fun onBack() {
@@ -61,7 +63,7 @@ class DefaultRootComponent(
         data object Home: Config
 
         @Serializable
-        data class BookInfo(val preview: BookPreview): Config
+        data object Favorites: Config
     }
 
 }

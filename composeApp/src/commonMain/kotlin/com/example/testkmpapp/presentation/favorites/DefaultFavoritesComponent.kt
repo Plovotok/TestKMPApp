@@ -1,4 +1,4 @@
-package com.example.testkmpapp.presentation.home
+package com.example.testkmpapp.presentation.favorites
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
@@ -17,10 +17,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 
 @OptIn(ExperimentalDecomposeApi::class)
-class DefaultHomeComponent(
+class DefaultFavoritesComponent(
     private val componentContext: ComponentContext,
-    private val onFavorites: () -> Unit
-) : HomeComponent, ComponentContext by componentContext {
+    private val onBack: () -> Unit
+): FavoritesComponent, ComponentContext by componentContext {
 
     private val navigation = PanelsNavigation<Unit, BookInfo, Unit>()
 
@@ -36,14 +36,14 @@ class DefaultHomeComponent(
         )
 
     private fun listComponent(context: ComponentContext) =
-        DefaultBookListComponent(
+        DefaultFavoritesListComponent(
             componentContext = context,
-            onBookClicked = {
+            onInfo = {
                 navigation.navigate { state ->
                     state.copy(details = BookInfo(it))
                 }
             },
-            onFavorites = onFavorites
+            onBack = onBack
         )
 
     private fun detailsComponent(
@@ -58,7 +58,7 @@ class DefaultHomeComponent(
     )
 
 
-    override val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>> = _panels
+    override val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponent, *, *>> = _panels
 
     override fun setMode(mode: ChildPanelsMode) {
         navigation.navigate { state ->
@@ -79,4 +79,5 @@ class DefaultHomeComponent(
 
     @Serializable
     private data class BookInfo(val preview: BookPreview)
+
 }

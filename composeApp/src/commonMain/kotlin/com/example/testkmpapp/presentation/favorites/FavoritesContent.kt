@@ -1,4 +1,4 @@
-package com.example.testkmpapp.presentation.home
+package com.example.testkmpapp.presentation.favorites
 
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,11 +27,10 @@ import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
-fun HomeContent(
-    component: HomeComponent,
+fun FavoritesContent(
+    component: FavoritesComponent,
     modifier: Modifier = Modifier
 ) {
-
     val panels by component.panels.subscribeAsState()
 
     val activeBookId = panels.details?.instance?.preview?.id
@@ -41,8 +40,8 @@ fun HomeContent(
     BaseScreen(
         contentWindowInsets = WindowInsets(0.dp)
     ) {
-
         BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+
             val mode =
                 when {
                     maxWidth >= 800.dp -> ChildPanelsMode.DUAL
@@ -57,7 +56,7 @@ fun HomeContent(
             ChildPanels(
                 panels = panels,
                 mainChild = {
-                    BookListContent(
+                    FavoritesListContent(
                         component = it.instance,
                         activeBookId = activeBookId,
                         modifier = Modifier
@@ -86,7 +85,9 @@ fun HomeContent(
                     dualWeights = Pair(first = 0.45F, second = 0.55F),
                 ),
                 secondPanelPlaceholder = {
-                    EmptyScreen(title = "Choose book from list")
+                    EmptyScreen(
+                        title = "Choose book from list"
+                    )
                 },
                 animators = ChildPanelsAnimators(
                     single = iosLikeSlideExperimental(),

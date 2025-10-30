@@ -15,6 +15,7 @@ fun RootViewController(root: RootComponent, backDispatcher: BackDispatcher) = Co
     PredictiveBackGestureOverlay(
         backDispatcher = backDispatcher,
         backIcon = null,
+        endEdgeEnabled = false,
         modifier = Modifier.fillMaxSize()
     ) {
         RootContent(root, modifier = Modifier.fillMaxSize())

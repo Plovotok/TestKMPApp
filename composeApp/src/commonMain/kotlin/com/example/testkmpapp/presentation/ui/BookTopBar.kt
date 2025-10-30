@@ -1,19 +1,21 @@
 package com.example.testkmpapp.presentation.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,23 +24,38 @@ fun BookTopBar(
     actions: @Composable (RowScope.() -> Unit) = {},
     showTitle: Boolean = true,
     title: @Composable () -> Unit,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
+    colors: TopAppBarColors = BookTopbarDefaults.colors(),
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     modifier: Modifier = Modifier
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
             AnimatedVisibility(
                 visible = showTitle,
-                modifier = Modifier.fillMaxWidth(),
                 enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
+                exit = ExitTransition.None
             ) {
-                title()
+                Row(
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    title()
+                }
             }
         },
         modifier = modifier,
         actions = actions,
+        windowInsets = windowInsets,
         navigationIcon = navigationIcon,
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = containerColor),
+        colors = colors,
+    )
+}
+
+object BookTopbarDefaults {
+
+    @Composable
+    fun colors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.surface,
+        navigationIconContentColor = colorScheme.primary,
+        actionIconContentColor = colorScheme.primary
     )
 }

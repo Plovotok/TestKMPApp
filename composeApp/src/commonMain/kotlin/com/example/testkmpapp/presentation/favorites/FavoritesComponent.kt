@@ -1,4 +1,4 @@
-package com.example.testkmpapp.presentation.home
+package com.example.testkmpapp.presentation.favorites
 
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanels
@@ -8,9 +8,9 @@ import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.example.testkmpapp.presentation.info.BookInfoComponent
 
 @OptIn(ExperimentalDecomposeApi::class)
-interface HomeComponent: BackHandlerOwner {
+interface FavoritesComponent: BackHandlerOwner {
 
-    val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>>
+    val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponent, *, *>>
 
     fun setMode(mode: ChildPanelsMode)
 

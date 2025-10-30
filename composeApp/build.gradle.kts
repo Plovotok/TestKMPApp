@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +8,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -18,6 +22,7 @@ kotlin {
     
     listOf(
         iosArm64(),
+        iosX64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
@@ -39,6 +44,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
 
             implementation(libs.ktor.client.android)
+            implementation(libs.androidx.room.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -52,6 +58,7 @@ kotlin {
 
             api(libs.decompose)
             api(libs.decompose.extensions.compose)
+            api(libs.decompose.extensions.compose.experimental)
             api(libs.essenty.lifecycle)
             api(libs.essenty.lifecycle.coroutines)
 
@@ -72,6 +79,12 @@ kotlin {
             implementation(libs.kmpalette.core)
 
             implementation(libs.compose.icons)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.sqlite)
+
+            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0-alpha06")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -85,6 +98,10 @@ kotlin {
 android {
     namespace = "com.example.testkmpapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
         applicationId = "com.example.testkmpapp"
@@ -107,9 +124,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    dependencies {
+        ksp(libs.androidx.room.compiler)
+    }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}

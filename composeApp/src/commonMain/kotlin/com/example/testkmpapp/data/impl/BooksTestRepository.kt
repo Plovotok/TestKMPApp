@@ -1,27 +1,57 @@
 package com.example.testkmpapp.data.impl
 
+import com.example.testkmpapp.db.AppDatabase
+import com.example.testkmpapp.db.entity.FavoriteBookEntity
 import com.example.testkmpapp.domain.BooksRepository
 import com.example.testkmpapp.domain.models.Author
 import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.models.BookPreview
-import com.example.testkmpapp.domain.models.Genre
-import com.example.testkmpapp.domain.models.Rating
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
-class BooksTestRepository: BooksRepository {
+class BooksTestRepository(
+    favoritesDb: AppDatabase
+): BooksRepository {
 
     private val json = Json {
         ignoreUnknownKeys = true
         prettyPrint = true
     }
 
+    private val dao = favoritesDb.favoriteDao()
+
     private val data by lazy {
         json.decodeFromString<BookPagingResponse>(mockData)
+    }
+
+    override fun getFavorites(): Flow<List<BookPreview>> = dao.getFavorites().map {
+        it.map {
+            BookPreview(
+                id = it.remoteId,
+                title = it.title,
+                subTitle = it.subtitle,
+                image = it.imageUrl
+            )
+        }
+    }
+
+    override suspend fun addBookToFavorite(book: BookPreview) {
+        val entity = FavoriteBookEntity(
+            remoteId = book.id,
+            title = book.title,
+            subtitle = book.subTitle ?: "",
+            imageUrl = book.image ?: ""
+        )
+        dao.addToFavorite(entity)
+    }
+
+    override suspend fun removeBookFromFavorite(book: BookPreview) {
+        dao.removeFromFavorite(book.id)
     }
 
     override suspend fun getBooks(
@@ -48,16 +78,20 @@ class BooksTestRepository: BooksRepository {
         }
         return withContext(Dispatchers.Default) {
             delay(Random.nextLong(500, 1500))
-            val item = data.books.flatMap { it }.first { it.id == id }
-            item.copy(
+            val item = data.books.flatMap { it }.firstOrNull { it.id == id }
+            BookPreview(
+                id = id,
+                title = item?.title ?: "",
+                subTitle = item?.subTitle,
+                image = item?.image,
                 desc = buildDesc(),
                 date = 2020.0,
                 numberOfPages = Random.nextDouble(12.0, 557.0),
-                authors = item.authors.toMutableList().apply {
+                authors = item?.authors?.toMutableList()?.apply {
                     add(
                         Author(-1, "Eugene Plovotok")
                     )
-                }
+                } ?: emptyList()
             )
         }
     }

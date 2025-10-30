@@ -6,6 +6,6 @@ import com.example.testkmpapp.domain.BooksRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-//    factory<BooksRepository> { BooksRepositoryImpl(get()) }
-    factory<BooksRepository> { BooksTestRepository() }
+//    factory<BooksRepository> { BooksRepositoryImpl(get(), get()) }
+    factory<BooksRepository> { BooksTestRepository(get()) }
 }

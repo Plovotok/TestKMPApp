@@ -2,8 +2,9 @@ package com.example.testkmpapp.presentation.home
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
-import com.example.testkmpapp.domain.models.BookPagingResponse
 import com.example.testkmpapp.domain.BooksRepository
+import com.example.testkmpapp.domain.models.BookPagingResponse
+import com.example.testkmpapp.domain.models.BookPreview
 import com.example.testkmpapp.domain.models.Genre
 import com.example.testkmpapp.presentation.Paginator
 import com.example.testkmpapp.presentation.base.BaseViewModel
@@ -17,16 +18,23 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
 
     private val repository: BooksRepository by inject()
 
-    val state: MutableValue<HomeComponent.BooksState> = MutableValue(HomeComponent.BooksState())
+    val state: MutableValue<BookListComponent.BooksState> = MutableValue(BookListComponent.BooksState())
+
+    val currentGenres: MutableValue<List<Genre>> = MutableValue(emptyList())
+
+    init {
+        repository.getFavorites().collectInViewModel { list ->
+            state.update {
+                it.copy(favorites = list.map { it.id })
+            }
+        }
+    }
 
     private val pageSize = 30
 
-    var currentGenres: List<Genre> = emptyList()
-        private set
-
     private fun getPaginator(
         query: String = "",
-        genres: List<String> = currentGenres.map { it.requestName },
+        genres: List<String> = emptyList(),
         authors: List<String> = emptyList()
     ) = Paginator(
         initialKey = 0,
@@ -80,18 +88,19 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
 
     private var paginator: Paginator<Int, BookPagingResponse> = getPaginator()
 
-    fun applyGenres(genres: List<Genre>) {
-        currentGenres = genres
-        paginator = getPaginator("")
-        searchBooks("")
-    }
-
     init {
         loadNextItems()
     }
 
-    fun searchBooks(query: String) {
-        paginator = getPaginator(query)
+    fun searchBooks(query: String, genres: List<Genre>) {
+        currentGenres.update { genres }
+        state.update {
+            it.copy(books = emptyList(), isRefreshing = true, refreshError = null, isAppending = false, appendError = null)
+        }
+        paginator = getPaginator(
+            query,
+            genres = genres.map { it.requestName }
+        )
         loadNextItems()
     }
 
@@ -104,6 +113,17 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
     fun retry() {
         viewModelScope.launch {
             paginator.retry()
+        }
+    }
+
+    fun removeBookFromFavorites(book: BookPreview) {
+        viewModelScope.launch {
+            try {
+                repository.removeBookFromFavorite(book)
+            } catch (e: Throwable) {
+                ensureActive()
+                e.printStackTrace()
+            }
         }
     }
 }

@@ -1,22 +1,20 @@
 package com.example.testkmpapp.presentation
 
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.slide
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.arkivanov.essenty.backhandler.BackHandler
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackAnimatable
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.materialPredictiveBackAnimatable
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimatable
+import com.arkivanov.essenty.backhandler.BackEvent
 
 @OptIn(ExperimentalDecomposeApi::class)
-actual fun <C : Any, T : Any> backAnimation(
-    backHandler: BackHandler,
-    onBack: () -> Unit
-): StackAnimation<C, T> {
-    return predictiveBackAnimation(
-        backHandler = backHandler,
-        fallbackAnimation = stackAnimation(fade() + slide()),
-        onBack = onBack
-    )
-}
+actual fun getPredictiveBackAnimatable(initialBackEvent: BackEvent): PredictiveBackAnimatable = materialPredictiveBackAnimatable(initialBackEvent)

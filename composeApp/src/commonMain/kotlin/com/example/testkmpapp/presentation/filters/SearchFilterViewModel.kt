@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.update
 import com.example.testkmpapp.domain.BooksRepository
 import com.example.testkmpapp.domain.models.Genre
 import com.example.testkmpapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ class SearchFilterViewModel(
     fun onQueryChanged(newQuery: String) {
         searchJob?.cancel()
         query.update { newQuery }
-        searchJob = viewModelScope.launch {
+        searchJob = viewModelScope.launch(Dispatchers.Default) {
             delay(300)
             val newGenres = if (newQuery.isBlank()) {
                 allGenres
