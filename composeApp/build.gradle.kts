@@ -180,7 +180,7 @@ compose.desktop {
 
             macOS {
                 this.dockName = "Books"
-                this.appCategory = "public.app-category.developer-tools"
+                this.appCategory = "public.app-category.books"
                 this.bundleID = "com.example.testkmpapp"
                 iconFile.set(project.file("books-icon.icns"))
             }
