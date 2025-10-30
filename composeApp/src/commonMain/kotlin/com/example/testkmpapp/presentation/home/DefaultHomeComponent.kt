@@ -1,82 +1,82 @@
 package com.example.testkmpapp.presentation.home
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.slot.navigate
-import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.router.panels.ChildPanels
+import com.arkivanov.decompose.router.panels.ChildPanelsMode
+import com.arkivanov.decompose.router.panels.Panels
+import com.arkivanov.decompose.router.panels.PanelsNavigation
+import com.arkivanov.decompose.router.panels.childPanels
+import com.arkivanov.decompose.router.panels.navigate
+import com.arkivanov.decompose.router.panels.pop
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.update
 import com.example.testkmpapp.domain.models.BookPreview
-import com.example.testkmpapp.domain.models.Genre
-import com.example.testkmpapp.presentation.base.getViewModel
-import com.example.testkmpapp.presentation.filters.DefaultSearchFilerComponent
-import com.example.testkmpapp.presentation.filters.SearchFiltersComponent
+import com.example.testkmpapp.presentation.info.BookInfoComponent
+import com.example.testkmpapp.presentation.info.DefaultBookInfoComponent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 
+@OptIn(ExperimentalDecomposeApi::class)
 class DefaultHomeComponent(
     private val componentContext: ComponentContext,
-    private val onBookClicked: (book: BookPreview) -> Unit,
     private val onFavorites: () -> Unit
 ) : HomeComponent, ComponentContext by componentContext {
 
-    private val vm: SearchViewModel = getViewModel { SearchViewModel() }
+    private val navigation = PanelsNavigation<Unit, BookInfo, Unit>()
 
-    private val savedQuery = stateKeeper.consume("query", String.serializer()) ?: ""
+    private val _panels =
+        childPanels(
+            source = navigation,
+            initialPanels = { Panels(main = Unit) },
+            serializers = SERIALIZERS,
+            handleBackButton = true,
+            mainFactory = { _, ctx -> listComponent(ctx) },
+            detailsFactory = ::detailsComponent,
+            extraFactory = { _, _ -> },
+        )
 
-    override val query: MutableValue<String> = MutableValue(savedQuery)
-
-    init {
-        stateKeeper.register("query", String.serializer()) { query.value }
-    }
-
-    override fun onQueryChanged(newQuery: String) {
-        query.update { newQuery }
-    }
-
-    private val dialogNavigation = SlotNavigation<DialogConfig>()
-
-    override val filterDialog: Value<ChildSlot<*, SearchFiltersComponent>> =
-        childSlot(
-            source = dialogNavigation,
-            serializer = DialogConfig.serializer(),
-            handleBackButton = true
-        ) { config, context ->
-            DefaultSearchFilerComponent(
-                ctx = context,
-                currentGenres = vm.currentGenres,
-                onNewGenres = {
-                    vm.applyGenres(it)
-                },
-                onDismiss = {
-                    dialogNavigation.dismiss()
+    private fun listComponent(context: ComponentContext) =
+        DefaultBookListComponent(
+            componentContext = context,
+            onBookClicked = {
+                navigation.navigate { state ->
+                    state.copy(details = BookInfo(it))
                 }
-            )
+            },
+            onFavorites = onFavorites
+        )
+
+    private fun detailsComponent(
+        info: BookInfo,
+        ctx: ComponentContext
+    ) = DefaultBookInfoComponent(
+        componentContext = ctx,
+        preview = info.preview,
+        onGoBack = {
+            navigation.pop()
         }
-
-    override fun showFiltersDialog() {
-        dialogNavigation.navigate { DialogConfig() }
-    }
-
-    override val state: Value<HomeComponent.BooksState> = vm.state
-
-    override fun loadNext() = vm.loadNextItems()
-
-    override fun showBookInfo(book: BookPreview) = onBookClicked(book)
-    override fun openFavorites() = onFavorites()
-
-    override fun retry() = vm.retry()
-
-    override fun removeBookFromFavorites(book: BookPreview) = vm.removeBookFromFavorites(book)
-
-    override fun getBooks(query: String) = vm.searchBooks(query)
-
-    @Serializable
-    private data class DialogConfig(
-        val activeGenres: List<Genre> = emptyList()
     )
 
+
+    override val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>> = _panels
+
+    override fun setMode(mode: ChildPanelsMode) {
+        navigation.navigate { state ->
+            state.copy(
+                details = state.takeIf { mode == ChildPanelsMode.DUAL }?.details?.preview?.let { BookInfo(preview = it) } ?: state.details,
+                mode = mode
+            )
+        }
+    }
+
+    override fun onBack() {
+        navigation.pop()
+    }
+
+    private companion object {
+        private val SERIALIZERS = Triple(Unit.serializer(), BookInfo.serializer(), Unit.serializer())
+    }
+
+    @Serializable
+    private data class BookInfo(val preview: BookPreview)
 }

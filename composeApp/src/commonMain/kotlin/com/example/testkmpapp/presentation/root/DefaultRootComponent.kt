@@ -35,34 +35,20 @@ class DefaultRootComponent(
     private fun child(config: Config, childComponentContext: ComponentContext): RootComponent.Child =
         when (config) {
             is Config.Home -> Home(homeComponent(childComponentContext))
-            is Config.BookInfo -> BookInfo(bookInfoComponent(config.preview, childComponentContext))
             is Config.Favorites -> Favorites(favoritesComponent(childComponentContext))
         }
 
     private fun homeComponent(componentContext: ComponentContext): HomeComponent =
         DefaultHomeComponent(
             componentContext = componentContext,
-            onBookClicked = {
-                navigation.pushNew(Config.BookInfo(it))
-            },
             onFavorites = {
                 navigation.pushNew(Config.Favorites)
             }
         )
 
-    private fun bookInfoComponent(preview: BookPreview, componentContext: ComponentContext): BookInfoComponent =
-        DefaultBookInfoComponent(
-            preview = preview,
-            componentContext = componentContext,
-            onGoBack = ::onBack
-        )
-
     private fun favoritesComponent(componentContext: ComponentContext): FavoritesComponent =
         DefaultFavoritesComponent(
             componentContext = componentContext,
-            onInfo = {
-                navigation.pushNew(Config.BookInfo(it))
-            },
             onBack = ::onBack
         )
 
@@ -75,9 +61,6 @@ class DefaultRootComponent(
 
         @Serializable
         data object Home: Config
-
-        @Serializable
-        data class BookInfo(val preview: BookPreview): Config
 
         @Serializable
         data object Favorites: Config

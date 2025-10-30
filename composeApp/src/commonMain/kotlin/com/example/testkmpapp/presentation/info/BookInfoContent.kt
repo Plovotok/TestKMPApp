@@ -9,9 +9,14 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +29,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -39,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -52,16 +60,18 @@ import com.example.testkmpapp.presentation.description
 import com.example.testkmpapp.presentation.isInternetError
 import com.example.testkmpapp.presentation.ui.BaseScreen
 import com.example.testkmpapp.presentation.ui.BookTopBar
-import com.example.testkmpapp.presentation.ui.components.screens.NoInternetScreen
+import com.example.testkmpapp.presentation.ui.BookTopbarDefaults
 import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.BookInfoHeaderImage
 import com.example.testkmpapp.presentation.ui.components.StarRating
 import com.example.testkmpapp.presentation.ui.components.icons.BackButton
+import com.example.testkmpapp.presentation.ui.components.screens.NoInternetScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookInfoContent(
     component: BookInfoComponent,
+    showBackButton: Boolean,
     modifier: Modifier = Modifier
 ) {
     val model by component.state.subscribeAsState()
@@ -123,10 +133,12 @@ fun BookInfoContent(
                         },
                         showTitle = showTitle,
                         navigationIcon = {
-                            BackButton(
-                                onClick = component::onBack,
-                                tint = iconsColor
-                            )
+                            if (showBackButton) {
+                                BackButton(
+                                    onClick = component::onBack,
+                                    tint = iconsColor
+                                )
+                            }
                         },
                         actions = {
                             val isFavorite by remember {
@@ -148,158 +160,177 @@ fun BookInfoContent(
                                 )
                             }
                         },
-                        containerColor = Color.Transparent,
+                        windowInsets = TopAppBarDefaults.windowInsets.only(WindowInsetsSides.Vertical + WindowInsetsSides.End),
+                        colors = BookTopbarDefaults.colors().copy(containerColor = Color.Transparent)
                     )
                 }
             },
+            contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Vertical + WindowInsetsSides.End),
             modifier = modifier
         ) { paddings ->
+            Box {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .run {
-                        if (model.fullInfo != null) this.verticalScroll(scrollState) else this
-                    }
-                    .padding(bottom = paddings.calculateBottomPadding()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                BookInfoHeaderImage(
-                    modifier = Modifier,
-                    imageUrl = component.preview.image,
-                    contentDescription = component.preview.title,
-                    onLightChange = {
-                        println("isLight = $it")
-                        isLightImage = it
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = component.preview.title,
-                    style = MaterialTheme.typography.headlineLarge,
+                Column(
                     modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                        .onGloballyPositioned {
-                            with(density) {
-                                showTitle =
-                                    it.positionInWindow().y + it.size.height <= paddings.calculateTopPadding()
-                                        .toPx()
-                            }
-                        },
-                    textAlign = TextAlign.Start,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                if (!model.isLoading) {
-                    if (model.error != null) {
-                        val isInternetError = model.error.isInternetError()
-
-                        if (isInternetError) {
-                            NoInternetScreen(
-                                onRefresh = component::getBookInfo
-                            )
-                        } else {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = model.error.description() ?: "Something went wrong :(",
-                                    modifier = Modifier.padding(horizontal = 40.dp),
-                                    textAlign = TextAlign.Center
-                                )
-                            }
+                        .fillMaxSize()
+                        .run {
+                            if (model.fullInfo != null) this.verticalScroll(scrollState) else this
                         }
-                    } else {
-                        model.fullInfo?.let {
-                            Row (
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 20.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    modifier = Modifier.weight(1f, fill = false)
+                        .padding(bottom = paddings.calculateBottomPadding())
+                        .padding(
+                            start = paddings.calculateStartPadding(LocalLayoutDirection.current),
+                            end = paddings.calculateEndPadding(LocalLayoutDirection.current)
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    BookInfoHeaderImage(
+                        modifier = Modifier,
+                        imageUrl = component.preview.image,
+                        contentDescription = component.preview.title,
+                        onLightChange = {
+                            println("isLight = $it")
+                            isLightImage = it
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = component.preview.title,
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                            .fillMaxWidth()
+                            .onGloballyPositioned {
+                                with(density) {
+                                    showTitle =
+                                        it.positionInWindow().y + it.size.height <= paddings.calculateTopPadding()
+                                            .toPx()
+                                }
+                            },
+                        textAlign = TextAlign.Start,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    if (!model.isLoading) {
+                        if (model.error != null) {
+                            val isInternetError = model.error.isInternetError()
+
+                            if (isInternetError) {
+                                NoInternetScreen(
+                                    onRefresh = component::getBookInfo
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    val rating = it.rating?.average ?: 0.0
-                                    StarRating(
-                                        starCount = 1,
-                                        rating = rating,
-                                        modifier = Modifier.size(22.dp),
-                                        rateColor = Color(0xffffca00),
-                                        baseColor = Color.Gray
-                                    )
-
                                     Text(
-                                        text = ((rating * 100).toInt().toDouble() / 10).toString(),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = FontWeight.Medium,
-                                        color = colorScheme.lightGrayTinted
+                                        text = model.error.description()
+                                            ?: "Something went wrong :(",
+                                        modifier = Modifier.padding(horizontal = 40.dp),
+                                        textAlign = TextAlign.Center
                                     )
                                 }
-
-                                it.numberOfPages?.toInt()?.let {
-                                    Text(
-                                        text = "$it pages",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = FontWeight.Medium,
-                                        color = colorScheme.lightGrayTinted
-                                    )
-                                }
-
                             }
-                            Spacer(modifier = Modifier.height(24.dp))
-                            val description = it.desc?.ifEmpty { null } ?: "-"
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
-                                        append("Description: ")
-                                    }
-                                    append(description)
-                                },
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
-                            )
-                            Spacer(Modifier.height(24.dp))
+                        } else {
+                            model.fullInfo?.let {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        modifier = Modifier.weight(1f, fill = false)
+                                    ) {
+                                        val rating = it.rating?.average ?: 0.0
+                                        StarRating(
+                                            starCount = 1,
+                                            rating = rating,
+                                            modifier = Modifier.size(22.dp),
+                                            rateColor = Color(0xffffca00),
+                                            baseColor = Color.Gray
+                                        )
 
-                            if (it.authors.isNotEmpty()) {
+                                        Text(
+                                            text = ((rating * 100).toInt()
+                                                .toDouble() / 10).toString(),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Medium,
+                                            color = colorScheme.lightGrayTinted
+                                        )
+                                    }
+
+                                    it.numberOfPages?.toInt()?.let {
+                                        Text(
+                                            text = "$it pages",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Medium,
+                                            color = colorScheme.lightGrayTinted
+                                        )
+                                    }
+
+                                }
+                                Spacer(modifier = Modifier.height(24.dp))
+                                val description = it.desc?.ifEmpty { null } ?: "-"
                                 Text(
                                     text = buildAnnotatedString {
                                         withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
-                                            append("Authors: ")
+                                            append("Description: ")
                                         }
-                                        it.authors.forEachIndexed { index, author ->
-                                            append(author.name)
-                                            if (index != it.authors.lastIndex) {
-                                                append(", ")
-                                            }
-                                        }
+                                        append(description)
                                     },
                                     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
                                 )
                                 Spacer(Modifier.height(24.dp))
+
+                                if (it.authors.isNotEmpty()) {
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
+                                                append("Authors: ")
+                                            }
+                                            it.authors.forEachIndexed { index, author ->
+                                                append(author.name)
+                                                if (index != it.authors.lastIndex) {
+                                                    append(", ")
+                                                }
+                                            }
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                            .padding(horizontal = 20.dp)
+                                    )
+                                    Spacer(Modifier.height(24.dp))
+                                }
                             }
                         }
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                } else {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+
+
                 }
 
-
+                Box(
+                    modifier = Modifier
+                        .background(colorScheme.background)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterEnd)
+                        .padding(end = paddings.calculateEndPadding(LocalLayoutDirection.current))
+                )
             }
         }
     }

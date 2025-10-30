@@ -29,8 +29,6 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
 
-//            linkerOpts.add("-lsqlite3")
-
             export(libs.decompose)
             export(libs.essenty.lifecycle)
             export(libs.essenty.back.handler)
@@ -60,6 +58,7 @@ kotlin {
 
             api(libs.decompose)
             api(libs.decompose.extensions.compose)
+            api(libs.decompose.extensions.compose.experimental)
             api(libs.essenty.lifecycle)
             api(libs.essenty.lifecycle.coroutines)
 
@@ -84,6 +83,8 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.androidx.sqlite)
+
+            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0-alpha06")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -129,13 +130,6 @@ android {
     }
 }
 
-project.afterEvaluate {
-    tasks.named("kspDebugKotlinAndroid") {
-        dependsOn(tasks.named("generateResourceAccessorsForAndroidDebug"))
-        enabled = false
-    }
-}
-
 dependencies {
     debugImplementation(compose.uiTooling)
 
@@ -143,39 +137,7 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
-
-    kspCommonMainMetadata(libs.androidx.room.compiler)
 }
-
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
-
-tasks.withType<com.google.devtools.ksp.gradle.KspAATask>().configureEach {
-    // This ensures that the resource generation task runs before KSP
-    dependsOn(
-        // Android
-        "generateActualResourceCollectorsForAndroidMain",
-        "generateResourceAccessorsForAndroidMain",
-        "generateActualResourceCollectorsForAndroidMain",
-        "generateComposeResClass",
-        "generateResourceAccessorsForCommonMain",
-        "generateExpectResourceCollectorsForCommonMain",
-        "generateResourceAccessorsForAndroidDebug",
-        // iOS
-        "generateResourceAccessorsForIosArm64Main",
-        "generateActualResourceCollectorsForIosArm64Main",
-        "generateResourceAccessorsForIosMain",
-        "generateResourceAccessorsForAppleMain",
-        "generateResourceAccessorsForNativeMain",
-    )
-}
-
-//kotlin.sourceSets.commonMain {
-//    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-//}
 
 room {
     schemaDirectory("$projectDir/schemas")

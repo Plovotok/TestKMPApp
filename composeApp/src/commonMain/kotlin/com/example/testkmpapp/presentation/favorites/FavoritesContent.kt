@@ -1,105 +1,106 @@
 package com.example.testkmpapp.presentation.favorites
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.experimental.panels.ChildPanels
+import com.arkivanov.decompose.extensions.compose.experimental.panels.ChildPanelsAnimators
+import com.arkivanov.decompose.extensions.compose.experimental.panels.HorizontalChildPanelsLayout
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.panels.ChildPanelsMode
+import com.example.testkmpapp.presentation.getPredictiveBackAnimatable
+import com.example.testkmpapp.presentation.info.BookInfoContent
+import com.example.testkmpapp.presentation.iosLikeSlideExperimental
 import com.example.testkmpapp.presentation.ui.BaseScreen
-import com.example.testkmpapp.presentation.ui.components.BookListItem
-import com.example.testkmpapp.presentation.ui.components.icons.BackButton
+import com.example.testkmpapp.presentation.ui.colorScheme
 import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
-import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun FavoritesContent(
-    component: FavoritesComponent
+    component: FavoritesComponent,
+    modifier: Modifier = Modifier
 ) {
+    val panels by component.panels.subscribeAsState()
 
-    val state by component.state.subscribeAsState()
+    val activeBookId = panels.details?.instance?.preview?.id
+
+    val dividerColor = colorScheme.lightGrayTinted
 
     BaseScreen(
-        topBar = {
-            CenterAlignedTopAppBar(
-                navigationIcon = {
-                    BackButton(onClick = component::onBackClicked)
-                },
-                title = {
-                    Text(text = "Favorites")
-                }
-            )
-        }
+        contentWindowInsets = WindowInsets(0.dp)
     ) {
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+        BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+
+            val mode =
+                when {
+                    maxWidth >= 800.dp -> ChildPanelsMode.DUAL
+                    else -> ChildPanelsMode.SINGLE
+                }
+
+            DisposableEffect(mode) {
+                component.setMode(mode)
+                onDispose {}
             }
-        } else {
-            if (state.totalItems > 0) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            top = it.calculateTopPadding()
-                        )
-                ) {
-                    val query by component.query.subscribeAsState()
-                    SearchInputText(
-                        text = query,
-                        onTextChange = component::onQueryChanged,
-                        hint = "eg. Harry Potter",
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (state.filtered.isNotEmpty()) {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(bottom = it.calculateBottomPadding()),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            items(state.filtered) {
-                                BookListItem(
-                                    book = it,
-                                    onClick = {
-                                        component.onBookClicked(it)
-                                    }
+
+            ChildPanels(
+                panels = panels,
+                mainChild = {
+                    FavoritesListContent(
+                        component = it.instance,
+                        activeBookId = activeBookId,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .drawWithContent {
+                                drawContent()
+                                drawLine(
+                                    color = dividerColor,
+                                    start = Offset(size.width, 0f),
+                                    end = Offset(size.width, size.height)
                                 )
                             }
-                        }
-                    } else {
-                        EmptyScreen(
-                            title = "Not found",
-                            description = "Book \"${state.query}\" is not found.",
-                            modifier = Modifier.padding(horizontal = 40.dp)
-                        )
-                    }
-                }
-            } else {
-                EmptyScreen(
-                    title = "List is empty",
-                    description = "You have not add any book yet.",
-                    modifier = Modifier.padding(horizontal = 40.dp)
-                )
-            }
+                    )
+                },
+                detailsChild = {
+                    BookInfoContent(
+                        component = it.instance,
+                        showBackButton = mode == ChildPanelsMode.SINGLE,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                },
+                extraChild = {
+
+                },
+                layout = HorizontalChildPanelsLayout(
+                    dualWeights = Pair(first = 0.45F, second = 0.55F),
+                ),
+                secondPanelPlaceholder = {
+                    EmptyScreen(
+                        title = "Choose book from list"
+                    )
+                },
+                animators = ChildPanelsAnimators(
+                    single = iosLikeSlideExperimental(),
+                    dual = fade() to fade()
+                ),
+                predictiveBackParams = {
+                    PredictiveBackParams(
+                        backHandler = component.backHandler,
+                        onBack = component::onBack,
+                        animatable = ::getPredictiveBackAnimatable,
+                    )
+                },
+            )
         }
     }
 }

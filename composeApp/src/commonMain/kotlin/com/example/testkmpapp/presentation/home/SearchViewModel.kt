@@ -18,7 +18,9 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
 
     private val repository: BooksRepository by inject()
 
-    val state: MutableValue<HomeComponent.BooksState> = MutableValue(HomeComponent.BooksState())
+    val state: MutableValue<BookListComponent.BooksState> = MutableValue(BookListComponent.BooksState())
+
+    val currentGenres: MutableValue<List<Genre>> = MutableValue(emptyList())
 
     init {
         repository.getFavorites().collectInViewModel { list ->
@@ -30,12 +32,9 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
 
     private val pageSize = 30
 
-    var currentGenres: List<Genre> = emptyList()
-        private set
-
     private fun getPaginator(
         query: String = "",
-        genres: List<String> = currentGenres.map { it.requestName },
+        genres: List<String> = emptyList(),
         authors: List<String> = emptyList()
     ) = Paginator(
         initialKey = 0,
@@ -89,21 +88,19 @@ class SearchViewModel: BaseViewModel(), KoinComponent {
 
     private var paginator: Paginator<Int, BookPagingResponse> = getPaginator()
 
-    fun applyGenres(genres: List<Genre>) {
-        currentGenres = genres
-        paginator = getPaginator("")
-        searchBooks("")
-    }
-
     init {
         loadNextItems()
     }
 
-    fun searchBooks(query: String) {
+    fun searchBooks(query: String, genres: List<Genre>) {
+        currentGenres.update { genres }
         state.update {
             it.copy(books = emptyList(), isRefreshing = true, refreshError = null, isAppending = false, appendError = null)
         }
-        paginator = getPaginator(query)
+        paginator = getPaginator(
+            query,
+            genres = genres.map { it.requestName }
+        )
         loadNextItems()
     }
 

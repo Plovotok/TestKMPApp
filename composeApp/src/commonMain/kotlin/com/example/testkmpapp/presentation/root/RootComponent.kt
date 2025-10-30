@@ -16,7 +16,6 @@ interface RootComponent: BackHandlerOwner {
 
     sealed class Child() {
         class Home(val component: HomeComponent): Child()
-        class BookInfo(val component: BookInfoComponent): Child()
         class Favorites(val component: FavoritesComponent): Child()
     }
 }

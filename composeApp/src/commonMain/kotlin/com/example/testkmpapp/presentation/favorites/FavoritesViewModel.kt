@@ -18,7 +18,7 @@ class FavoritesViewModel: BaseViewModel(), KoinComponent {
 
     val query: MutableValue<String> = MutableValue("")
 
-    val state: MutableValue<FavoritesComponent.UiState> = MutableValue(FavoritesComponent.UiState(query = query.value))
+    val state: MutableValue<FavoritesListComponent.UiState> = MutableValue(FavoritesListComponent.UiState(query = query.value))
 
     private var allItems: MutableValue<List<BookPreview>> = MutableValue(emptyList())
 

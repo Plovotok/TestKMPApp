@@ -1,25 +1,18 @@
 package com.example.testkmpapp.presentation.favorites
 
-import androidx.compose.runtime.Stable
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.router.panels.ChildPanels
+import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import com.arkivanov.decompose.value.Value
-import com.example.testkmpapp.domain.models.BookPreview
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.example.testkmpapp.presentation.info.BookInfoComponent
 
-interface FavoritesComponent {
+@OptIn(ExperimentalDecomposeApi::class)
+interface FavoritesComponent: BackHandlerOwner {
 
-    fun removeFromFavorites(book: BookPreview)
-    fun onBookClicked(book: BookPreview)
-    fun onBackClicked()
+    val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponent, *, *>>
 
-    val state: Value<UiState>
+    fun setMode(mode: ChildPanelsMode)
 
-    val query: Value<String>
-    fun onQueryChanged(newQuery: String)
-
-    @Stable
-    data class UiState(
-        val query: String = "",
-        val totalItems: Int = 0,
-        val filtered: List<BookPreview> = emptyList(),
-        val isLoading: Boolean = true
-    )
+    fun onBack()
 }

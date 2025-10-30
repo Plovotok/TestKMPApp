@@ -24,7 +24,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.example.testkmpapp.presentation.ui.colorScheme
-import com.example.testkmpapp.presentation.ui.components.bottom_sheet.BottomSheetLayout
+import com.example.testkmpapp.presentation.ui.components.bottom_sheet.AdaptiveDialogLayout
 import com.example.testkmpapp.presentation.ui.components.buttons.PrimaryButton
 import com.example.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import com.example.testkmpapp.presentation.ui.components.text_field.SearchInputText
@@ -46,54 +45,41 @@ import kotlinx.coroutines.launch
 fun SearchFilterContent(
     component: SearchFiltersComponent
 ) {
-    val state = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
 
-    suspend fun dismiss() {
-        state.hide()
+    fun dismiss() {
         component.dismiss()
     }
 
     val scope = rememberCoroutineScope()
 
-    BottomSheetLayout(
+    AdaptiveDialogLayout(
         onDismiss = component::dismiss,
-        dragHandle = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ){
-                BottomSheetDefaults.DragHandle()
-
-                IconButton(
-                    onClick = {
-                        component.setNewGenres(emptyList())
-                        scope.launch {
-                            dismiss()
-                        }
-                    },
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(26.dp)
-                            .background(Color.Gray, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Clear filters",
-                            modifier = Modifier
-                                .size(22.dp)
-                        )
+        actions = {
+            IconButton(
+                onClick = {
+                    component.setNewGenres(emptyList())
+                    scope.launch {
+                        dismiss()
                     }
+                },
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .background(colorScheme.semiLightGrayTinted.copy(alpha = 0.3f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Clear filters",
+                        modifier = Modifier
+                            .size(22.dp)
+                    )
                 }
             }
         },
-        sheetState = state
     ) {
         Column(
             modifier = Modifier.fillMaxWidth().fillMaxHeight(0.85f),
