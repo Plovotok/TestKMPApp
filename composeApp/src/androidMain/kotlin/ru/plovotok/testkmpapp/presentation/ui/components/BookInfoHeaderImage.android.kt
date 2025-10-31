@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -77,8 +78,7 @@ actual fun BookInfoHeaderImage(
                         scaleY = (scale + 0.1f).coerceAtLeast(1.1f)
                         this.transformOrigin = TransformOrigin(0.5f, 1f)
                     }
-                    .fillMaxWidth()
-                    .aspectRatio(1.5f)
+                    .fillMaxSize()
                     .blur(radius = 20.dp),
                 contentScale = ContentScale.Crop
             )
@@ -90,8 +90,7 @@ actual fun BookInfoHeaderImage(
                         scaleY = (scale + 0.1f).coerceAtLeast(1.1f)
                         this.transformOrigin = TransformOrigin(0.5f, 1f)
                     }
-                    .fillMaxWidth()
-                    .aspectRatio(1.5f)
+                    .fillMaxSize()
                     .background(color)
             )
         }
@@ -117,8 +116,7 @@ actual fun BookInfoHeaderImage(
                     scaleY = scale.coerceAtLeast(1f)
                     this.transformOrigin = TransformOrigin(0.5f, 1f)
                 }
-                .fillMaxWidth()
-                .aspectRatio(1.5f)
+                .fillMaxSize()
         )
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -66,6 +67,7 @@ import ru.plovotok.testkmpapp.presentation.ui.components.BookInfoHeaderImage
 import ru.plovotok.testkmpapp.presentation.ui.components.StarRating
 import ru.plovotok.testkmpapp.presentation.ui.components.icons.BackButton
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.NoInternetScreen
+import kotlin.math.min
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -184,15 +186,22 @@ fun BookInfoContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    BookInfoHeaderImage(
-                        modifier = Modifier,
-                        imageUrl = component.preview.image,
-                        contentDescription = component.preview.title,
-                        onLightChange = {
-                            println("isLight = $it")
-                            isLightImage = it
-                        }
-                    )
+                    BoxWithConstraints {
+
+                        val height = min(this.maxWidth.value * 1.5f, 300f)
+                        BookInfoHeaderImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(height.dp),
+                            imageUrl = component.preview.image,
+                            contentDescription = component.preview.title,
+                            onLightChange = {
+                                println("isLight = $it")
+                                isLightImage = it
+                            }
+                        )
+                    }
+
 
                     Spacer(modifier = Modifier.height(24.dp))
 
