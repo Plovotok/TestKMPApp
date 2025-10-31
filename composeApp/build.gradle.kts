@@ -175,7 +175,7 @@ compose.desktop {
 
             this.vendor = "Plovotok"
             this.description = "Test Compose Multiplatform application"
-            this.copyright = "© 2024 Plovotok. All rights reserved"
+            this.copyright = "Copyright © 2025 Plovotok. All rights reserved."
             this.licenseFile.set(project.file("LICENSE.txt"))
 
             macOS {

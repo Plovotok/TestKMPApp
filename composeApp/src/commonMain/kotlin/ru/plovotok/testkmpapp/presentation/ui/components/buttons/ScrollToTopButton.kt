@@ -386,7 +386,7 @@ private fun BoxScope.ScrollToTopButton(
                 .dropShadow(
                     CircleShape,
                     Shadow(
-                        32.dp,
+                        16.dp,
                         alpha = 0.28f
                     )
                 )
