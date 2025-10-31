@@ -100,6 +100,8 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.apache)
+
+            implementation("com.github.tkuenneth:nativeparameterstoreaccess:0.1.3")
         }
     }
 }

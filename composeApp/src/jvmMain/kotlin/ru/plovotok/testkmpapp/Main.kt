@@ -1,5 +1,8 @@
 package ru.plovotok.testkmpapp
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -7,6 +10,17 @@ import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.github.tkuenneth.nativeparameterstoreaccess.Dconf
+import com.github.tkuenneth.nativeparameterstoreaccess.Dconf.HAS_DCONF
+import com.github.tkuenneth.nativeparameterstoreaccess.MacOSDefaults
+import com.github.tkuenneth.nativeparameterstoreaccess.NativeParameterStoreAccess.IS_MACOS
+import com.github.tkuenneth.nativeparameterstoreaccess.NativeParameterStoreAccess.IS_WINDOWS
+import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.context.startKoin
 import ru.plovotok.testkmpapp.di.appModule
@@ -15,7 +29,9 @@ import ru.plovotok.testkmpapp.presentation.root.RootContent
 import testkmpapp.composeapp.generated.resources.Res
 import testkmpapp.composeapp.generated.resources.app_icon
 import java.lang.System.setProperty
+import java.util.Locale
 
+@OptIn(DelicateCoroutinesApi::class)
 fun main() {
 
     startKoin {
@@ -35,6 +51,18 @@ fun main() {
 
     setProperty("apple.awt.application.name", "Books")
 
+    var isInDarkMode by mutableStateOf(isSystemInDarkTheme())
+
+    GlobalScope.launch {
+        while (isActive) {
+            val newMode = isSystemInDarkTheme()
+            if (isInDarkMode != newMode) {
+                isInDarkMode = newMode
+            }
+            delay(1000)
+        }
+    }
+
     application {
         val windowState = rememberWindowState()
 
@@ -50,7 +78,25 @@ fun main() {
                 windowInfo = LocalWindowInfo.current,
             )
 
-            RootContent(root)
+            RootContent(root, isDark = isInDarkMode)
         }
     }
+}
+
+fun isSystemInDarkTheme(): Boolean = when {
+    IS_WINDOWS -> {
+        val result = WindowsRegistry.getWindowsRegistryEntry(
+            "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            "AppsUseLightTheme")
+        result == 0x0
+    }
+    IS_MACOS -> {
+        val result = MacOSDefaults.getDefaultsEntry("AppleInterfaceStyle")
+        result == "Dark"
+    }
+    HAS_DCONF -> {
+        val result = Dconf.getDconfEntry("/org/gnome/desktop/interface/gtk-theme")
+        result.lowercase(Locale.ROOT).contains("dark")
+    }
+    else -> false
 }
