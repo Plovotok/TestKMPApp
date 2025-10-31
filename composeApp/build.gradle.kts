@@ -183,6 +183,9 @@ compose.desktop {
                 this.appCategory = "public.app-category.books"
                 this.bundleID = "ru.plovotok.testkmpapp"
                 iconFile.set(project.file("books-icon.icns"))
+                jvmArgs += listOf(
+                    "-Dapple.awt.application.appearance=system"
+                )
             }
             windows {
                 iconFile.set(project.file("books-icon.ico"))

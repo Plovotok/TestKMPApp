@@ -1,5 +1,6 @@
 package ru.plovotok.testkmpapp.presentation.root
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,9 +17,11 @@ import ru.plovotok.testkmpapp.presentation.ui.theme.BooksTheme
 @Composable
 fun RootContent(
     component: RootComponent,
+    isDark: Boolean = isSystemInDarkTheme(),
     modifier: Modifier = Modifier
 ) {
     BooksTheme(
+        isDark = isDark,
         modifier = modifier.fillMaxSize()
     ) {
         Children(

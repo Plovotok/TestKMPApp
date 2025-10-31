@@ -33,9 +33,9 @@ import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
 import ru.plovotok.testkmpapp.presentation.ui.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookListItem
-import ru.plovotok.testkmpapp.presentation.ui.components.buttons.ScrollToTopButton
 import ru.plovotok.testkmpapp.presentation.ui.components.icons.BackButton
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
+import ru.plovotok.testkmpapp.presentation.ui.components.scroll_bar.PlatformScrollController
 import ru.plovotok.testkmpapp.presentation.ui.components.text_field.SearchInputText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,9 +116,9 @@ fun FavoritesListContent(
                                 }
                             }
 
-                            ScrollToTopButton(
-                                scrollState = scrollState,
-                                verticalPadding = it.calculateBottomPadding() + 16.dp
+                            PlatformScrollController(
+                                listState = scrollState,
+                                bottomPadding = it.calculateBottomPadding(),
                             )
                         }
                     } else {

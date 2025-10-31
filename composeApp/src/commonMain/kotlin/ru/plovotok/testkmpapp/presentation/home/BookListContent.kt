@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.plovotok.testkmpapp.presentation.description
 import ru.plovotok.testkmpapp.presentation.filters.SearchFilterContent
 import ru.plovotok.testkmpapp.presentation.isInternetError
@@ -45,12 +46,11 @@ import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
 import ru.plovotok.testkmpapp.presentation.ui.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookListItem
-import ru.plovotok.testkmpapp.presentation.ui.components.buttons.ScrollToTopButton
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.NoInternetScreen
+import ru.plovotok.testkmpapp.presentation.ui.components.scroll_bar.PlatformScrollController
 import ru.plovotok.testkmpapp.presentation.ui.components.text_field.CloseCircleIconButton
 import ru.plovotok.testkmpapp.presentation.ui.components.text_field.SearchInputText
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -305,9 +305,9 @@ fun BookListContent(
                                 }
                             }
 
-                            ScrollToTopButton(
-                                scrollState = listState,
-                                verticalPadding = it.calculateBottomPadding() + 16.dp
+                            PlatformScrollController(
+                                listState = listState,
+                                topPadding = it.calculateTopPadding(),
                             )
                         }
                     } else {

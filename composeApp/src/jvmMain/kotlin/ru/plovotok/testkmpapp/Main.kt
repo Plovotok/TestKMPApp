@@ -7,11 +7,11 @@ import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import org.jetbrains.compose.resources.painterResource
+import org.koin.core.context.startKoin
 import ru.plovotok.testkmpapp.di.appModule
 import ru.plovotok.testkmpapp.presentation.root.DefaultRootComponent
 import ru.plovotok.testkmpapp.presentation.root.RootContent
-import org.jetbrains.compose.resources.painterResource
-import org.koin.core.context.startKoin
 import testkmpapp.composeapp.generated.resources.Res
 import testkmpapp.composeapp.generated.resources.app_icon
 import java.lang.System.setProperty
