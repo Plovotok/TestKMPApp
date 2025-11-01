@@ -2,7 +2,7 @@ package ru.plovotok.testkmpapp.presentation.favorites
 
 import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.BookPreview
+import ru.plovotok.shared.domain.models.BookPreview
 
 interface FavoritesListComponent {
 

@@ -23,7 +23,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.context.startKoin
-import ru.plovotok.testkmpapp.di.appModule
+import ru.plovotok.shared.di.appModule
 import ru.plovotok.testkmpapp.presentation.root.DefaultRootComponent
 import ru.plovotok.testkmpapp.presentation.root.RootContent
 import testkmpapp.composeapp.generated.resources.Res

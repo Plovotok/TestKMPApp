@@ -2,15 +2,15 @@ package ru.plovotok.testkmpapp.presentation.favorites
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
-import ru.plovotok.testkmpapp.domain.BooksRepository
-import ru.plovotok.testkmpapp.domain.models.BookPreview
-import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.plovotok.shared.domain.BooksRepository
+import ru.plovotok.shared.domain.models.BookPreview
+import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 
 class FavoritesViewModel: BaseViewModel(), KoinComponent {
 

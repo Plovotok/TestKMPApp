@@ -2,7 +2,7 @@ package ru.plovotok.testkmpapp.presentation.favorites
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.BookPreview
+import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.testkmpapp.presentation.base.getViewModel
 
 class DefaultFavoritesListComponent(

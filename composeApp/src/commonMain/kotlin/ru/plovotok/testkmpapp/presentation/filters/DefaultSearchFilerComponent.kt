@@ -3,7 +3,7 @@ package ru.plovotok.testkmpapp.presentation.filters
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.Genre
+import ru.plovotok.shared.domain.models.Genre
 import ru.plovotok.testkmpapp.presentation.base.getViewModel
 
 class DefaultSearchFilerComponent(

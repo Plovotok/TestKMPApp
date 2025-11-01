@@ -3,8 +3,8 @@ package ru.plovotok.testkmpapp.presentation.home
 import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.BookPreview
-import ru.plovotok.testkmpapp.domain.models.Genre
+import ru.plovotok.shared.domain.models.BookPreview
+import ru.plovotok.shared.domain.models.Genre
 import ru.plovotok.testkmpapp.presentation.filters.SearchFiltersComponent
 
 interface BookListComponent {

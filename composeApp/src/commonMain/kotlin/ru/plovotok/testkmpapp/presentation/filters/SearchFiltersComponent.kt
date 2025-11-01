@@ -2,7 +2,7 @@ package ru.plovotok.testkmpapp.presentation.filters
 
 import androidx.compose.runtime.Stable
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.Genre
+import ru.plovotok.shared.domain.models.Genre
 
 interface SearchFiltersComponent {
 

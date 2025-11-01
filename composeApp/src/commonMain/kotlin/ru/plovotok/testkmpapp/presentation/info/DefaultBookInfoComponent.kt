@@ -2,9 +2,9 @@ package ru.plovotok.testkmpapp.presentation.info
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.BookPreview
-import ru.plovotok.testkmpapp.presentation.base.getViewModel
 import org.koin.core.component.KoinComponent
+import ru.plovotok.shared.domain.models.BookPreview
+import ru.plovotok.testkmpapp.presentation.base.getViewModel
 
 class DefaultBookInfoComponent(
     private val componentContext: ComponentContext,

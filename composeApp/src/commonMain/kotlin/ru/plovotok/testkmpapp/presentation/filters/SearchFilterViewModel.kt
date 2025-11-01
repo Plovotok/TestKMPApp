@@ -2,15 +2,15 @@ package ru.plovotok.testkmpapp.presentation.filters
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
-import ru.plovotok.testkmpapp.domain.BooksRepository
-import ru.plovotok.testkmpapp.domain.models.Genre
-import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.plovotok.shared.domain.BooksRepository
+import ru.plovotok.shared.domain.models.Genre
+import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 
 class SearchFilterViewModel(
     currentGenres: List<Genre>,

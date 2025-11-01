@@ -7,15 +7,13 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.BookPreview
+import kotlinx.serialization.Serializable
 import ru.plovotok.testkmpapp.presentation.favorites.DefaultFavoritesComponent
 import ru.plovotok.testkmpapp.presentation.favorites.FavoritesComponent
 import ru.plovotok.testkmpapp.presentation.home.DefaultHomeComponent
 import ru.plovotok.testkmpapp.presentation.home.HomeComponent
-import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent
-import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
-import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.*
-import kotlinx.serialization.Serializable
+import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.Favorites
+import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.Home
 
 class DefaultRootComponent(
     private val ctx: ComponentContext

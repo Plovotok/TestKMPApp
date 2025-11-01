@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.composeHotReload)
 
     alias(libs.plugins.ksp)
-    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -45,9 +44,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.kotlinx.coroutines.android)
-
-            implementation(libs.ktor.client.android)
-            implementation(libs.androidx.room.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,6 +55,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(projects.shared)
+
             api(libs.decompose)
             api(libs.decompose.extensions.compose)
             api(libs.decompose.extensions.compose.experimental)
@@ -67,11 +65,6 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization)
 
             implementation(libs.kotlinx.coroutines.core)
 
@@ -83,14 +76,10 @@ kotlin {
 
             implementation(libs.compose.icons)
 
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
-            implementation(libs.androidx.sqlite)
-
             implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0-beta01")
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -99,7 +88,6 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.client.apache)
 
             implementation("com.github.tkuenneth:nativeparameterstoreaccess:0.1.3")
         }
@@ -142,23 +130,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    dependencies {
-        ksp(libs.androidx.room.compiler)
-    }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
-
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
 }
 
 compose.desktop {

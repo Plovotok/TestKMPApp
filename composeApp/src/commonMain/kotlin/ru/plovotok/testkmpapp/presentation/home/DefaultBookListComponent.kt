@@ -9,13 +9,13 @@ import com.arkivanov.decompose.router.slot.navigate
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import ru.plovotok.testkmpapp.domain.models.BookPreview
-import ru.plovotok.testkmpapp.domain.models.Genre
 import ru.plovotok.testkmpapp.presentation.base.getViewModel
 import ru.plovotok.testkmpapp.presentation.filters.DefaultSearchFilerComponent
 import ru.plovotok.testkmpapp.presentation.filters.SearchFiltersComponent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
+import ru.plovotok.shared.domain.models.BookPreview
+import ru.plovotok.shared.domain.models.Genre
 
 class DefaultBookListComponent(
     private val componentContext: ComponentContext,

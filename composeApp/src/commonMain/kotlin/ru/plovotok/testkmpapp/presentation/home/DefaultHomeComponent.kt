@@ -10,11 +10,11 @@ import com.arkivanov.decompose.router.panels.childPanels
 import com.arkivanov.decompose.router.panels.navigate
 import com.arkivanov.decompose.router.panels.pop
 import com.arkivanov.decompose.value.Value
-import ru.plovotok.testkmpapp.domain.models.BookPreview
-import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
-import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
+import ru.plovotok.shared.domain.models.BookPreview
+import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
+import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent
 
 @OptIn(ExperimentalDecomposeApi::class)
 class DefaultHomeComponent(

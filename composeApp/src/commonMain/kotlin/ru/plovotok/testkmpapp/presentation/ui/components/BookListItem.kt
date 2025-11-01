@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import ru.plovotok.testkmpapp.domain.models.BookPreview
+import ru.plovotok.shared.domain.models.BookPreview
 
 @Composable
 fun BookListItem(

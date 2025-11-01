@@ -39,9 +39,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import kotlinx.coroutines.flow.distinctUntilChanged
-import ru.plovotok.testkmpapp.presentation.description
+import ru.plovotok.shared.description
+import ru.plovotok.shared.isInternetError
 import ru.plovotok.testkmpapp.presentation.filters.SearchFilterContent
-import ru.plovotok.testkmpapp.presentation.isInternetError
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
 import ru.plovotok.testkmpapp.presentation.ui.colorScheme

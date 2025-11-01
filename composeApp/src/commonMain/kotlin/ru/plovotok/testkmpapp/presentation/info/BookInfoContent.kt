@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -57,8 +56,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import ru.plovotok.testkmpapp.presentation.description
-import ru.plovotok.testkmpapp.presentation.isInternetError
+import ru.plovotok.shared.description
+import ru.plovotok.shared.isInternetError
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
 import ru.plovotok.testkmpapp.presentation.ui.BookTopbarDefaults
