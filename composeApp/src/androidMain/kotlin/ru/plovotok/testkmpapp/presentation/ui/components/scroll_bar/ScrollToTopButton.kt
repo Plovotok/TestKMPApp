@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
@@ -380,6 +381,7 @@ private fun BoxScope.ScrollToTopButton(
     ) {
         Box(
             modifier = Modifier
+                .navigationBarsPadding()
                 .padding(horizontal = horizontalPadding)
                 .padding(vertical = verticalPadding)
                 .size(56.dp)
