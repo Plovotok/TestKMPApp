@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.composeHotReload)
 
-    alias(libs.plugins.ksp)
 }
 
 kotlin {

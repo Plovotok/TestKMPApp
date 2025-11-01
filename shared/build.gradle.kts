@@ -18,8 +18,6 @@ kotlin {
         namespace = "ru.plovotok.shared"
         compileSdk = 36
         minSdk = 24
-
-
     }
 
     jvm()
@@ -112,7 +110,6 @@ kotlin {
 
         jvmMain {
             dependencies {
-                implementation(libs.kotlinx.coroutinesSwing)
                 implementation(libs.ktor.client.apache)
             }
         }
