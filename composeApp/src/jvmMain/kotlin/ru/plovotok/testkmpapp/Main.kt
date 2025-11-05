@@ -21,6 +21,7 @@ import com.github.tkuenneth.nativeparameterstoreaccess.MacOSDefaults
 import com.github.tkuenneth.nativeparameterstoreaccess.NativeParameterStoreAccess.IS_MACOS
 import com.github.tkuenneth.nativeparameterstoreaccess.NativeParameterStoreAccess.IS_WINDOWS
 import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry
+import com.sun.tools.javac.tree.TreeInfo.args
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.context.startKoin
 import ru.plovotok.shared.di.appModule
+import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
 import ru.plovotok.testkmpapp.presentation.di.viewModelsModule
 import ru.plovotok.testkmpapp.presentation.root.DefaultRootComponent
 import ru.plovotok.testkmpapp.presentation.root.RootContent
@@ -36,6 +38,7 @@ import ru.plovotok.testkmpapp.presentation.ui.LocalResizeIcon
 import testkmpapp.composeapp.generated.resources.Res
 import testkmpapp.composeapp.generated.resources.app_icon
 import java.awt.Cursor
+import java.awt.Desktop
 import java.lang.System.setProperty
 import java.util.Locale
 
@@ -70,6 +73,10 @@ fun main() {
             }
             delay(1000)
         }
+    }
+
+    Desktop.getDesktop().setOpenURIHandler { uri ->
+        DeeplinkHelper.handleDeepLink(uri.uri.toString())
     }
 
     application {

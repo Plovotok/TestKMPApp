@@ -164,6 +164,10 @@ compose.desktop {
                 jvmArgs += listOf(
                     "-Dapple.awt.application.appearance=system"
                 )
+
+                infoPlist {
+                    extraKeysRawXml += macOsDeeplinkPlistProperty
+                }
             }
             windows {
                 iconFile.set(project.file("books-icon.ico"))
@@ -178,3 +182,19 @@ compose.desktop {
         }
     }
 }
+
+val macOsDeeplinkPlistProperty = """
+    <key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>CFBundleURLName</key>
+			<string>www.plovotok.ru</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>compose</string>
+			</array>
+		</dict>
+	</array>
+""".trimIndent()

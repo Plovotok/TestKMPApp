@@ -88,6 +88,8 @@ fun BookInfoContent(
         mutableStateOf(isDark)
     }
 
+    val title = component.preview.title ?: model.fullInfo?.title
+
     BoxWithConstraints {
 
         var showTitle by remember {
@@ -118,15 +120,15 @@ fun BookInfoContent(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                             ) {
                                 AsyncImage(
-                                    model = component.preview.image,
-                                    contentDescription = component.preview.title,
+                                    model = component.preview.image ?: model.fullInfo?.image,
+                                    contentDescription = title,
                                     modifier = Modifier
                                         .size(40.dp),
                                     contentScale = ContentScale.Fit
                                 )
 
                                 Text(
-                                    text = component.preview.title,
+                                    text = title ?: "",
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier
@@ -146,20 +148,22 @@ fun BookInfoContent(
                             val isFavorite by remember {
                                 derivedStateOf { model.isFavorite }
                             }
-                            IconButton(
-                                onClick = {
-                                    if (isFavorite) {
-                                        component.removeBookFromFavorites()
-                                    } else {
-                                        component.addBookToFavorites()
+                            if (!title.isNullOrBlank()) {
+                                IconButton(
+                                    onClick = {
+                                        if (isFavorite) {
+                                            component.removeBookFromFavorites()
+                                        } else {
+                                            component.addBookToFavorites()
+                                        }
                                     }
+                                ) {
+                                    Icon(
+                                        imageVector = if (!isFavorite) Icons.Default.BookmarkBorder else Icons.Default.Bookmark,
+                                        contentDescription = "Add to favorite",
+                                        tint = iconsColor
+                                    )
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = if (!isFavorite) Icons.Default.BookmarkBorder else Icons.Default.Bookmark,
-                                    contentDescription = "Add to favorite",
-                                    tint = iconsColor
-                                )
                             }
                         },
                         windowInsets = TopAppBarDefaults.windowInsets.only(WindowInsetsSides.Vertical + WindowInsetsSides.End),
@@ -193,7 +197,7 @@ fun BookInfoContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(height.dp),
-                            imageUrl = component.preview.image,
+                            imageUrl = component.preview.image ?: model.fullInfo?.image,
                             contentDescription = component.preview.title,
                             onLightChange = {
                                 println("isLight = $it")
@@ -206,7 +210,7 @@ fun BookInfoContent(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = component.preview.title,
+                        text = title ?: "",
                         style = MaterialTheme.typography.headlineLarge,
                         modifier = Modifier
                             .padding(horizontal = 20.dp)

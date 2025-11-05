@@ -24,7 +24,7 @@ fun BookListItem(
     ListItem(
         headlineContent = {
             Text(
-                text = book.title,
+                text = book.title ?: "-",
                 maxLines = 2,
                 overflow = TextOverflow.StartEllipsis
             )

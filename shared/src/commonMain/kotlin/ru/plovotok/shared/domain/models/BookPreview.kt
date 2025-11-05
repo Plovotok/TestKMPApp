@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BookPreview(
     val id: Int,
-    val title: String,
+    val title: String?,
     val subTitle: String? = null,
     val image: String? = null,
     @SerialName("published_date")

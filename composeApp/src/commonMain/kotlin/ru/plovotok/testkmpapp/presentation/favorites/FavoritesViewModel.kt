@@ -37,7 +37,7 @@ class FavoritesViewModel(
 
     private fun filterItems(query: String, items: List<BookPreview>): List<BookPreview> {
         return if (query.isBlank()) items else items.filter {
-            it.title.contains(query, true)
+            (it.title ?: "").contains(query, true)
         }
     }
 

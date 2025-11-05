@@ -33,7 +33,7 @@ internal class BooksRepositoryImpl(
     override suspend fun addBookToFavorite(book: BookPreview) {
         val entity = FavoriteBookEntity(
             remoteId = book.id,
-            title = book.title,
+            title = book.title ?: "",
             subtitle = book.subTitle ?: "",
             imageUrl = book.image ?: ""
         )

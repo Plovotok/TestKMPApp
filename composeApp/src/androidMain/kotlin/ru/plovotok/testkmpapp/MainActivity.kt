@@ -1,5 +1,6 @@
 package ru.plovotok.testkmpapp
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
@@ -10,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.arkivanov.decompose.defaultComponentContext
+import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
 import ru.plovotok.testkmpapp.presentation.root.DefaultRootComponent
 import ru.plovotok.testkmpapp.presentation.root.RootContent
 
@@ -20,6 +22,10 @@ class MainActivity : ComponentActivity() {
 
         if (isCompactDevice()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
+        intent?.data?.path?.let {
+            DeeplinkHelper.handleDeepLink(it)
         }
 
 
@@ -38,6 +44,13 @@ class MainActivity : ComponentActivity() {
 
         }
 
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.data?.path?.let {
+            DeeplinkHelper.handleDeepLink(it)
+        }
     }
 
     private fun isCompactDevice(): Boolean {

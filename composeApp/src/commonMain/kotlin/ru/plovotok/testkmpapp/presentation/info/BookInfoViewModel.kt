@@ -39,7 +39,13 @@ class BookInfoViewModel(
     }
 
     fun addBookToFavorites() {
-        suspend { repository.addBookToFavorite(preview) }.runInViewModelScope()
+        val book = BookPreview(
+            id = preview.id,
+            title = preview.title ?: state.value.fullInfo?.title,
+            subTitle = preview.subTitle ?: state.value.fullInfo?.subTitle,
+            image = preview.image ?: state.value.fullInfo?.image
+        )
+        suspend { repository.addBookToFavorite(book) }.runInViewModelScope()
     }
 
     fun removeBookFromFavorites() {

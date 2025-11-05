@@ -133,8 +133,7 @@ fun <MC : Any, MT : Any, DC : Any, DT : Any, EC : Any, ET : Any> DynamicWeightCh
                             .fillMaxHeight()
                             .width(20.dp)
                             .graphicsLayer {
-                                translationX = fullWidthPx * currentLeftWeight() - size.width / 2
-                                translationY = fullHeightPx / 2 - size.height / 2
+                                translationX = fullWidthPx * currentLeftWeight()
                             }
                             .draggable(
                                 state = draggableState,
