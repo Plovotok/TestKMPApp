@@ -24,7 +24,10 @@ fun BookTopBar(
     actions: @Composable (RowScope.() -> Unit) = {},
     showTitle: Boolean = true,
     title: @Composable () -> Unit,
-    colors: TopAppBarColors = BookTopbarDefaults.colors(),
+    contentCanScrollBackward: Boolean = false,
+    colors: TopAppBarColors = BookTopbarDefaults.colors().copy(
+        containerColor = if (contentCanScrollBackward) colorScheme.navigationColor else colorScheme.background
+    ),
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     modifier: Modifier = Modifier
 ) {

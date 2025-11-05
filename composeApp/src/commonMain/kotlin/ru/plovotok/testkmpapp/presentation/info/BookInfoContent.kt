@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
@@ -106,7 +107,7 @@ fun BookInfoContent(
                             .graphicsLayer {
                                 this.alpha = topBarAlpha
                             }
-                            .background(colorScheme.background)
+                            .background(colorScheme.navigationColor)
                     )
                     val iconsColor = colorScheme.primary
 
@@ -289,15 +290,17 @@ fun BookInfoContent(
                                 }
                                 Spacer(modifier = Modifier.height(24.dp))
                                 val description = it.desc?.ifEmpty { null } ?: "-"
-                                Text(
-                                    text = buildAnnotatedString {
-                                        withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
-                                            append("Description: ")
-                                        }
-                                        append(description)
-                                    },
-                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
-                                )
+                                SelectionContainer {
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            withStyle(SpanStyle(color = colorScheme.semiLightGrayTinted)) {
+                                                append("Description: ")
+                                            }
+                                            append(description)
+                                        },
+                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                                    )
+                                }
                                 Spacer(Modifier.height(24.dp))
 
                                 if (it.authors.isNotEmpty()) {

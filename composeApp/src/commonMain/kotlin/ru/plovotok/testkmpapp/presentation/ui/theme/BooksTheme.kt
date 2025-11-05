@@ -1,5 +1,6 @@
 package ru.plovotok.testkmpapp.presentation.ui.theme
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -9,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ru.plovotok.testkmpapp.presentation.ui.AppColorScheme
 import ru.plovotok.testkmpapp.presentation.ui.LocalAppScheme
+import ru.plovotok.testkmpapp.presentation.ui.components.indication.rememberCupertinoIndication
 
 @Composable
 fun BooksTheme(
@@ -34,7 +36,11 @@ fun BooksTheme(
                 modifier = modifier,
                 color = colors.background
             ) {
-                content()
+                CompositionLocalProvider(
+                    LocalIndication provides LocalIndication.current
+                ) {
+                    content()
+                }
             }
         }
     }
@@ -49,7 +55,8 @@ private fun lightColorScheme() = AppColorScheme(
     semiLightGrayTinted = Color(125, 125, 125),
     textFieldBackground = Color(117, 117, 128, 31),
     sheetColor = Color.White,
-    surface2 = Color(239, 239, 239)
+    surface2 = Color(239, 239, 239),
+    navigationColor = Color(0xfff9f9f9)
 )
 
 private fun darkColorScheme() = AppColorScheme(
@@ -61,5 +68,6 @@ private fun darkColorScheme() = AppColorScheme(
     semiLightGrayTinted = Color(140, 140, 140),
     textFieldBackground = Color(117, 117, 128, 61),
     sheetColor = Color(14, 14, 16),
-    surface2 = Color(32, 32, 32, 255)
+    surface2 = Color(32, 32, 32, 255),
+    navigationColor = Color(0xff0d0d0d)
 )

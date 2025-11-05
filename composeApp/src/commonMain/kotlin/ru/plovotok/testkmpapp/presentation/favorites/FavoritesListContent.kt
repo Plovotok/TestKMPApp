@@ -48,6 +48,8 @@ fun FavoritesListContent(
 
     val state by component.state.subscribeAsState()
 
+    val scrollState = rememberLazyListState()
+
     BaseScreen(
         topBar = {
             BookTopBar(
@@ -91,7 +93,6 @@ fun FavoritesListContent(
                     Spacer(modifier = Modifier.height(16.dp))
                     if (state.filtered.isNotEmpty()) {
                         Box {
-                            val scrollState = rememberLazyListState()
                             LazyColumn(
                                 state = scrollState,
                                 modifier = Modifier.fillMaxSize(),
@@ -118,7 +119,6 @@ fun FavoritesListContent(
 
                             PlatformScrollController(
                                 listState = scrollState,
-                                bottomPadding = it.calculateBottomPadding(),
                             )
                         }
                     } else {

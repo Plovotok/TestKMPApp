@@ -44,6 +44,7 @@ import ru.plovotok.shared.isInternetError
 import ru.plovotok.testkmpapp.presentation.filters.SearchFilterContent
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
+import ru.plovotok.testkmpapp.presentation.ui.BookTopbarDefaults
 import ru.plovotok.testkmpapp.presentation.ui.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookListItem
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
@@ -68,6 +69,8 @@ fun BookListContent(
     }
 
     val activeGenres by component.currentGenres.subscribeAsState()
+
+    val listState = rememberLazyListState()
 
     BaseScreen(
         topBar = {
@@ -98,6 +101,7 @@ fun BookListContent(
                         }
                     }
                 },
+                contentCanScrollBackward = listState.canScrollBackward,
                 windowInsets = TopAppBarDefaults.windowInsets.only(WindowInsetsSides.Vertical + WindowInsetsSides.Start)
             )
         },
@@ -192,8 +196,6 @@ fun BookListContent(
 
                 else -> {
                     if (state.books.isNotEmpty()) {
-
-                        val listState = rememberLazyListState()
 
                         LaunchedEffect(state.books) {
                             snapshotFlow {

@@ -39,15 +39,15 @@ actual fun BoxScope.PlatformScrollController(
     )
 
     val interactionSource = remember { MutableInteractionSource() }
-//
-//    val isHovered by interactionSource.collectIsHoveredAsState()
-//    val isPressed by interactionSource.collectIsPressedAsState()
-//    val isDragged by interactionSource.collectIsDraggedAsState()
-//
-//    val alpha by animateFloatAsState(
-//        targetValue = if (listState.isScrollInProgress || isHovered || isDragged || isPressed) 1f else 0f,
-//        animationSpec = tween(250, delayMillis = if (listState.isScrollInProgress) 0 else 200)
-//    )
+
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val isDragged by interactionSource.collectIsDraggedAsState()
+    val isHovered by interactionSource.collectIsHoveredAsState()
+
+    val alpha by animateFloatAsState(
+        targetValue = if (listState.isScrollInProgress || isDragged || isPressed || isHovered) 1f else 0f,
+        animationSpec = tween(250, delayMillis = if (listState.isScrollInProgress) 0 else 200)
+    )
 
     VerticalScrollbar(
         adapter = adapter,

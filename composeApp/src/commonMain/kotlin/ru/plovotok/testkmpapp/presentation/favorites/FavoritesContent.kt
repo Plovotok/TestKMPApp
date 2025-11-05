@@ -63,11 +63,13 @@ fun FavoritesContent(
                             .fillMaxSize()
                             .drawWithContent {
                                 drawContent()
-                                drawLine(
-                                    color = dividerColor,
-                                    start = Offset(size.width, 0f),
-                                    end = Offset(size.width, size.height)
-                                )
+                                if (mode != ChildPanelsMode.SINGLE) {
+                                    drawLine(
+                                        color = dividerColor,
+                                        start = Offset(size.width, 0f),
+                                        end = Offset(size.width, size.height)
+                                    )
+                                }
                             }
                     )
                 },

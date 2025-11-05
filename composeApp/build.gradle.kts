@@ -34,6 +34,8 @@ kotlin {
             export(libs.essenty.lifecycle)
             export(libs.essenty.back.handler)
             export(libs.essenty.state.keeper)
+
+            this.binaryOption("bundleId", "ru.plovotok.kmp.TestKMPApp")
         }
     }
     
@@ -121,7 +123,7 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
         }
     }
