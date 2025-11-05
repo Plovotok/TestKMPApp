@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.context.startKoin
 import ru.plovotok.shared.di.appModule
+import ru.plovotok.testkmpapp.presentation.di.viewModelsModule
 import ru.plovotok.testkmpapp.presentation.root.DefaultRootComponent
 import ru.plovotok.testkmpapp.presentation.root.RootContent
 import ru.plovotok.testkmpapp.presentation.ui.LocalResizeIcon
@@ -42,6 +43,7 @@ import java.util.Locale
 fun main() {
 
     startKoin {
+        modules(viewModelsModule)
         modules(appModule())
     }
 

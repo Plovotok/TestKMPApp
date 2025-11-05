@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
@@ -19,8 +16,6 @@ import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.components.DynamicWeightChildPanels
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
 
-private val StartWeight = 0.45f
-
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun FavoritesContent(
@@ -31,9 +26,7 @@ fun FavoritesContent(
 
     val activeBookId = panels.details?.instance?.preview?.id
 
-    var weight: Float by rememberSaveable {
-        mutableFloatStateOf(StartWeight)
-    }
+    val weight by component.weight.subscribeAsState()
 
     BaseScreen(
         contentWindowInsets = WindowInsets(0.dp)
@@ -41,9 +34,7 @@ fun FavoritesContent(
         val mode = panels.mode
         DynamicWeightChildPanels(
             currentLeftWeight = { weight },
-            onWeightChange = {
-                weight = it
-            },
+            onWeightChange = component::onWeightChange,
             panels = panels,
             mainChild = {
                 FavoritesListContent(

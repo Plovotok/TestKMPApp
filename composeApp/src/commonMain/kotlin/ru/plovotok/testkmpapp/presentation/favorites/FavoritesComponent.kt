@@ -11,6 +11,9 @@ import ru.plovotok.testkmpapp.presentation.ui.components.ChildPanelsComponent
 @OptIn(ExperimentalDecomposeApi::class)
 interface FavoritesComponent: BackHandlerOwner, ChildPanelsComponent {
 
+    val weight: Value<Float>
+    fun onWeightChange(newWeight: Float)
+
     val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponent, *, *>>
 
     fun onBack()

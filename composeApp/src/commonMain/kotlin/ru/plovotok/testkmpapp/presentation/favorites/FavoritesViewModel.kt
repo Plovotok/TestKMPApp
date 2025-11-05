@@ -12,9 +12,9 @@ import ru.plovotok.shared.domain.BooksRepository
 import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 
-class FavoritesViewModel: BaseViewModel(), KoinComponent {
-
-    private val repository: BooksRepository by inject()
+class FavoritesViewModel(
+    private val repository: BooksRepository
+): BaseViewModel(), KoinComponent {
 
     val query: MutableValue<String> = MutableValue("")
 

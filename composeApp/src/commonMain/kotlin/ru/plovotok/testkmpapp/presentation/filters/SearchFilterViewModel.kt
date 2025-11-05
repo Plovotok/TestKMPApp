@@ -14,9 +14,8 @@ import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 
 class SearchFilterViewModel(
     currentGenres: List<Genre>,
+    private val repository: BooksRepository
 ): BaseViewModel(), KoinComponent {
-
-    private val repository: BooksRepository by inject()
 
     private val allGenres = repository.getGenres()
 

@@ -86,8 +86,11 @@ kotlin {
 
                 implementation(libs.kotlinx.coroutines.core)
 
-//                implementation(libs.compose.runtime)
-                // Add KMP dependencies here
+                // DataStore library
+                implementation("androidx.datastore:datastore:1.1.7")
+                // The Preferences DataStore library
+                implementation("androidx.datastore:datastore-preferences:1.1.7")
+
             }
         }
 

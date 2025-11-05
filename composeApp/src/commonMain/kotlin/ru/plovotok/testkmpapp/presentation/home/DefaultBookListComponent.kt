@@ -16,15 +16,16 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.shared.domain.models.Genre
+import ru.plovotok.testkmpapp.presentation.ViewModelFactoryProvider
 
 class DefaultBookListComponent(
     private val componentContext: ComponentContext,
     private val onBookClicked: (book: BookPreview) -> Unit,
     private val onCloseDetails: () -> Unit,
     private val onFavorites: () -> Unit
-): BookListComponent, ComponentContext by componentContext {
+): BookListComponent, ComponentContext by componentContext, ViewModelFactoryProvider {
 
-    private val vm: SearchViewModel = getViewModel { SearchViewModel() }
+    private val vm: SearchViewModel = getViewModel { vmFactory.createSearchViewModel() }
 
     private val savedQuery = stateKeeper.consume("query", String.serializer()) ?: ""
 

@@ -8,6 +8,8 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
+import ru.plovotok.testkmpapp.presentation.ViewModelFactoryProvider
+import ru.plovotok.testkmpapp.presentation.base.getViewModel
 import ru.plovotok.testkmpapp.presentation.favorites.DefaultFavoritesComponent
 import ru.plovotok.testkmpapp.presentation.favorites.FavoritesComponent
 import ru.plovotok.testkmpapp.presentation.home.DefaultHomeComponent
@@ -17,7 +19,11 @@ import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.Home
 
 class DefaultRootComponent(
     private val ctx: ComponentContext
-) : RootComponent, ComponentContext by ctx {
+) : RootComponent, ComponentContext by ctx, ViewModelFactoryProvider {
+
+    private val vm: RootViewModel = getViewModel { vmFactory.createRootViewModel() }
+
+    private val state: Value<Float> = vm.leftPanelState
 
     private val navigation = StackNavigation<Config>()
 
@@ -41,13 +47,21 @@ class DefaultRootComponent(
             componentContext = componentContext,
             onFavorites = {
                 navigation.pushNew(Config.Favorites)
+            },
+            weight = state,
+            onWeightChanged = {
+                vm.onWeightChange(it)
             }
         )
 
     private fun favoritesComponent(componentContext: ComponentContext): FavoritesComponent =
         DefaultFavoritesComponent(
             componentContext = componentContext,
-            onBack = ::onBack
+            onBack = ::onBack,
+            weight = state,
+            onWeightChanged = {
+                vm.onWeightChange(it)
+            }
         )
 
     override fun onBack() {

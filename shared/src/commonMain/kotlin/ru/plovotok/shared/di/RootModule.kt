@@ -7,5 +7,6 @@ fun appModule() = listOf(
     dataBaseModule,
     platformModule,
     networkModule,
-    repositoryModule
+    repositoryModule,
+    preferencesModule
 )

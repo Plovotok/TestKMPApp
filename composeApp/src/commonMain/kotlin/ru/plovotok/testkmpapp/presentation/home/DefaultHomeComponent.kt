@@ -19,7 +19,9 @@ import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent
 @OptIn(ExperimentalDecomposeApi::class)
 class DefaultHomeComponent(
     private val componentContext: ComponentContext,
-    private val onFavorites: () -> Unit
+    private val onFavorites: () -> Unit,
+    override val weight: Value<Float>,
+    private val onWeightChanged: (Float) -> Unit
 ) : HomeComponent, ComponentContext by componentContext {
 
     private val navigation = PanelsNavigation<Unit, BookInfo, Unit>()
@@ -64,6 +66,7 @@ class DefaultHomeComponent(
 
 
     override val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>> = _panels
+    override fun onWeightChange(newWeight: Float) = onWeightChanged(newWeight)
 
     override fun setMode(mode: ChildPanelsMode) {
         navigation.navigate { state ->

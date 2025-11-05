@@ -9,10 +9,9 @@ import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
 
 class BookInfoViewModel(
-    private val preview: BookPreview
+    private val preview: BookPreview,
+    private val repository: BooksRepository
 ): BaseViewModel(), KoinComponent {
-
-    private val repository: BooksRepository by inject()
 
     val state: MutableValue<BookInfoComponent.BookState> = MutableValue(BookInfoComponent.BookState())
 

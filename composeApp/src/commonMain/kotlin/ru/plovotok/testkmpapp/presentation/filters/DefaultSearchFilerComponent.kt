@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import ru.plovotok.shared.domain.models.Genre
+import ru.plovotok.testkmpapp.presentation.ViewModelFactoryProvider
 import ru.plovotok.testkmpapp.presentation.base.getViewModel
 
 class DefaultSearchFilerComponent(
@@ -11,9 +12,9 @@ class DefaultSearchFilerComponent(
     private val currentGenres: List<Genre>,
     private val onNewGenres: (genres: List<Genre>) -> Unit,
     private val onDismiss: () -> Unit
-) : SearchFiltersComponent, ComponentContext by ctx {
+) : SearchFiltersComponent, ComponentContext by ctx, ViewModelFactoryProvider {
 
-    private val vm = getViewModel { SearchFilterViewModel(currentGenres) }
+    private val vm = getViewModel { vmFactory.createSearchFilterViewModel(currentGenres) }
 
     override val query: MutableValue<String> = vm.query
 

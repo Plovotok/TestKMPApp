@@ -7,16 +7,19 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.plovotok.shared.domain.AppPreferences
 import ru.plovotok.shared.domain.BooksRepository
 import ru.plovotok.shared.domain.models.BookPagingResponse
 import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.shared.domain.models.Genre
 import ru.plovotok.testkmpapp.presentation.Paginator
 import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
+import kotlin.getValue
 
-class SearchViewModel: BaseViewModel(), KoinComponent {
-
-    private val repository: BooksRepository by inject()
+class SearchViewModel(
+    private val repository: BooksRepository,
+    private val preferences: AppPreferences
+): BaseViewModel() {
 
     val state: MutableValue<BookListComponent.BooksState> = MutableValue(BookListComponent.BooksState())
 
