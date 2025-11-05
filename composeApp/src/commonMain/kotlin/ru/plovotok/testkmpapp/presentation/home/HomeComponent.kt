@@ -6,13 +6,12 @@ import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
+import ru.plovotok.testkmpapp.presentation.ui.components.ChildPanelsComponent
 
 @OptIn(ExperimentalDecomposeApi::class)
-interface HomeComponent: BackHandlerOwner {
+interface HomeComponent: BackHandlerOwner, ChildPanelsComponent {
 
     val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>>
-
-    fun setMode(mode: ChildPanelsMode)
 
     fun onBack()
 }

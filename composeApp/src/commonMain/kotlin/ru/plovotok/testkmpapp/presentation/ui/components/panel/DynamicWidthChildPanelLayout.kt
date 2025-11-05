@@ -15,12 +15,11 @@ import com.arkivanov.decompose.router.panels.ChildPanelsMode
 
 @OptIn(ExperimentalDecomposeApi::class)
 class DynamicWidthChildPanelLayout(
-    @param: FloatRange(0.0, 1.0) private val startWeight: Float = 0.5f,
-    getLeftWidth: () -> Int
+    @param: FloatRange(0.0, 1.0) private val currentWeight: () -> Float = { 0.5f },
 ): ChildPanelsLayout {
 
     private val singleMeasurePolicy = SingleMeasurePolicy()
-    private val dualMeasurePolicy = DualMeasurePolicy(startWeight = startWeight, leftWidth = getLeftWidth)
+    private val dualMeasurePolicy = DualMeasurePolicy(currentWeight = currentWeight)
 
     @Composable
     override fun Layout(
@@ -57,12 +56,11 @@ class DynamicWidthChildPanelLayout(
     }
 
     private class DualMeasurePolicy(
-        private val startWeight: Float = 0.5f,
-        private val leftWidth: () -> Int
+        @param: FloatRange(0.0, 1.0) private val currentWeight: () -> Float = { 0.5f }
     ) : MeasurePolicy {
 
         override fun MeasureScope.measure(measurables: List<Measurable>, constraints: Constraints): MeasureResult {
-            val w1 = (constraints.maxWidth.toFloat() * startWeight).toInt() - leftWidth()
+            val w1 = (constraints.maxWidth.toFloat() * currentWeight()).toInt()
             val w2 = constraints.maxWidth - w1
             val placeable1 = measurables[0].measure(constraints.copy(maxWidth = w1, minWidth = w1))
             val placeable2 = measurables[1].measure(constraints.copy(maxWidth = w2, minWidth = w2))
