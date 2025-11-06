@@ -109,7 +109,7 @@ fun SearchFilterContent(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(colorScheme.background)
+                                .background(colorScheme.sheetColor)
                         ) {
                             PrimaryButton(
                                 text = "Apply",

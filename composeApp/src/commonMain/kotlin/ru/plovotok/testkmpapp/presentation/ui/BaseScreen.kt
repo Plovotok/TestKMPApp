@@ -14,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -24,10 +25,10 @@ import kotlinx.coroutines.launch
 fun BaseScreen(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
+    containerColor: Color = LocalAppScheme.current.background,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable ColumnScope.(PaddingValues) -> Unit,
 ) {
-    val colors = LocalAppScheme.current
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -36,12 +37,12 @@ fun BaseScreen(
 
     Scaffold(
         topBar = topBar,
-        containerColor = colors.background,
+        containerColor = containerColor,
         contentWindowInsets = contentWindowInsets,
         modifier = modifier
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides colors.onBackground
+            LocalContentColor provides LocalAppScheme.current.onBackground
         ) {
             Column(
                 modifier = Modifier

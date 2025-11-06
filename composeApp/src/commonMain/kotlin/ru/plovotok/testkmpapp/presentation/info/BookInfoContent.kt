@@ -34,17 +34,20 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -62,6 +65,7 @@ import ru.plovotok.shared.isInternetError
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
 import ru.plovotok.testkmpapp.presentation.ui.BookTopbarDefaults
+import ru.plovotok.testkmpapp.presentation.ui.LocalAppScheme
 import ru.plovotok.testkmpapp.presentation.ui.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookInfoHeaderImage
 import ru.plovotok.testkmpapp.presentation.ui.components.StarRating
@@ -74,6 +78,7 @@ import kotlin.math.min
 fun BookInfoContent(
     component: BookInfoComponent,
     showBackButton: Boolean,
+    containerColor: Color = LocalAppScheme.current.background,
     modifier: Modifier = Modifier
 ) {
     val model by component.state.subscribeAsState()
@@ -171,10 +176,15 @@ fun BookInfoContent(
                     )
                 }
             },
+            containerColor = containerColor ,
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Vertical + WindowInsetsSides.End),
             modifier = modifier
         ) { paddings ->
             Box {
+
+                var titleSize: Int by remember {
+                    mutableStateOf(Int.MAX_VALUE)
+                }
 
                 Column(
                     modifier = Modifier
@@ -204,8 +214,15 @@ fun BookInfoContent(
                                 isLightImage = it
                             }
                         )
-                    }
 
+                        LaunchedEffect(paddings, height, titleSize) {
+                            snapshotFlow { scrollState.value }.collect {
+                                with (density) {
+                                    showTitle = it >= (paddings.calculateTopPadding().toPx() + height + titleSize + 48.dp.toPx())
+                                }
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -214,14 +231,10 @@ fun BookInfoContent(
                         style = MaterialTheme.typography.headlineLarge,
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
-                            .fillMaxWidth()
-                            .onGloballyPositioned {
-                                with(density) {
-                                    showTitle =
-                                        it.positionInWindow().y + it.size.height <= paddings.calculateTopPadding()
-                                            .toPx()
-                                }
-                            },
+                            .onSizeChanged {
+                                titleSize = it.height
+                            }
+                            .fillMaxWidth(),
                         textAlign = TextAlign.Start,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis

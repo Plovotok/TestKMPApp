@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
@@ -53,6 +54,11 @@ fun RootContent(
                 component.onBookInfo(it.id)
             }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        delay(5000)
+        DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
     }
 
     BooksTheme(
@@ -92,6 +98,7 @@ fun RootContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     BookInfoContent(
+                        containerColor = Color.Transparent,
                         component = child.instance,
                         showBackButton = false,
                         modifier = Modifier.fillMaxSize()
