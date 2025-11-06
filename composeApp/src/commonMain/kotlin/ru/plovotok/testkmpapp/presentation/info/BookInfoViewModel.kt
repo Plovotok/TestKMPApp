@@ -3,7 +3,6 @@ package ru.plovotok.testkmpapp.presentation.info
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.update
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import ru.plovotok.shared.domain.BooksRepository
 import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.testkmpapp.presentation.base.BaseViewModel
@@ -13,7 +12,7 @@ class BookInfoViewModel(
     private val repository: BooksRepository
 ): BaseViewModel(), KoinComponent {
 
-    val state: MutableValue<SimilarBookInfoComponent.BookState> = MutableValue(SimilarBookInfoComponent.BookState())
+    val state: MutableValue<BookInfoComponent.BookState> = MutableValue(BookInfoComponent.BookState())
 
     init {
         getBookInfo()

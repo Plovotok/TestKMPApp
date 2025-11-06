@@ -1,13 +1,10 @@
 package ru.plovotok.testkmpapp.presentation.root
 
-import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import ru.plovotok.testkmpapp.presentation.favorites.FavoritesComponent
-import ru.plovotok.testkmpapp.presentation.filters.SearchFiltersComponent
 import ru.plovotok.testkmpapp.presentation.home.HomeComponent
-import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
 
 interface RootComponent: BackHandlerOwner {
     val stack: Value<ChildStack<*, Child>>

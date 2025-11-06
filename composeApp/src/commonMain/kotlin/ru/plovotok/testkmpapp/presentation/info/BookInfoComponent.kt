@@ -1,17 +1,28 @@
 package ru.plovotok.testkmpapp.presentation.info
 
-import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import ru.plovotok.shared.domain.models.BookPreview
-import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent.ChildBook
 
+interface BookInfoComponent {
 
-interface BookInfoComponent: BackHandlerOwner {
+    val state: Value<BookState>
+
+    data class BookState(
+        val fullInfo: BookPreview? = null,
+        val isLoading: Boolean = true,
+        val error: Throwable? = null,
+        val isFavorite: Boolean = false,
+        val similar: List<BookPreview>? = null
+    )
 
     val preview: BookPreview
 
-    val booksStack: Value<ChildStack<ChildBook, SimilarBookInfoComponent>>
+    fun onSimilarClick(preview: BookPreview)
+
+    fun addBookToFavorites()
+    fun removeBookFromFavorites()
+
+    fun getBookInfo()
 
     fun onBack()
 }

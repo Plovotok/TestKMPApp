@@ -13,7 +13,7 @@ import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import ru.plovotok.testkmpapp.presentation.DeeplinkHandler
 import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
 import ru.plovotok.testkmpapp.presentation.getPredictiveBackAnimatable
-import ru.plovotok.testkmpapp.presentation.info.BookInfoContent
+import ru.plovotok.testkmpapp.presentation.info.BookInfoWrapperContent
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.components.DynamicWeightChildPanels
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
@@ -59,7 +59,7 @@ fun HomeContent(
                 )
             },
             detailsChild = {
-                BookInfoContent(
+                BookInfoWrapperContent(
                     component = it.instance,
                     showBackButton = mode == ChildPanelsMode.SINGLE,
                     modifier = Modifier.fillMaxSize()

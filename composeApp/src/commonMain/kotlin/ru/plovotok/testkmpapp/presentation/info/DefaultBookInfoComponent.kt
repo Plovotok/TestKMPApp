@@ -1,63 +1,29 @@
 package ru.plovotok.testkmpapp.presentation.info
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.DelicateDecomposeApi
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
-import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
-import kotlinx.serialization.Serializable
 import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.testkmpapp.presentation.ViewModelFactoryProvider
 import ru.plovotok.testkmpapp.presentation.base.getViewModel
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class DefaultBookInfoComponent(
     private val componentContext: ComponentContext,
     override val preview: BookPreview,
-    private val goBack: () -> Unit
-) : BookInfoComponent, ComponentContext by componentContext, ViewModelFactoryProvider {
+    private val onGoBack: () -> Unit,
+    private val onSimilar: (preview: BookPreview) -> Unit
+): BookInfoComponent, ComponentContext by componentContext, ViewModelFactoryProvider {
 
-    private val navigation = StackNavigation<ChildBook>()
-    @OptIn(ExperimentalUuidApi::class)
-    override val booksStack: Value<ChildStack<ChildBook, SimilarBookInfoComponent>> = childStack(
-        source = navigation,
-        serializer = ChildBook.serializer(),
-        initialConfiguration = ChildBook(preview, false, Uuid.random().toString()),
-        handleBackButton = true,
-        childFactory = ::createChildBookComponent
-    )
+    private val vm = getViewModel { vmFactory.createBookInfoViewModel(book = preview) }
 
-    @OptIn(DelicateDecomposeApi::class, ExperimentalUuidApi::class)
-    private fun createChildBookComponent(book: ChildBook, ctx: ComponentContext) =
-        DefaultSimilarBookInfoComponent(
-            componentContext = ctx,
-            preview = book.preview,
-            onGoBack = {
-                if (booksStack.value.items.size > 1) {
-                    navigation.pop()
-                } else {
-                    goBack()
-                }
-            },
-            onSimilar = {
-                navigation.push(ChildBook(it, true, Uuid.random().toString()))
-            }
-        )
+    override val state: Value<BookInfoComponent.BookState> = vm.state
 
-    override fun onBack() {
-        navigation.pop()
-    }
+    override fun onSimilarClick(preview: BookPreview) = onSimilar(preview)
 
-    @Serializable
-    data class ChildBook(
-        val preview: BookPreview,
-        val hasParent: Boolean,
-        val modelId: String
-    )
+    override fun addBookToFavorites() = vm.addBookToFavorites()
+
+    override fun removeBookFromFavorites() = vm.removeBookFromFavorites()
+
+    override fun getBookInfo() = vm.getBookInfo()
+
+    override fun onBack() = onGoBack()
 }

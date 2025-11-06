@@ -13,8 +13,8 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 import ru.plovotok.shared.domain.models.BookPreview
-import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
-import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent
+import ru.plovotok.testkmpapp.presentation.info.BookInfoComponentWrapper
+import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponentWrapper
 
 @OptIn(ExperimentalDecomposeApi::class)
 class DefaultHomeComponent(
@@ -63,14 +63,14 @@ class DefaultHomeComponent(
     private fun detailsComponent(
         info: BookInfo,
         ctx: ComponentContext
-    ) = DefaultBookInfoComponent(
+    ) = DefaultBookInfoComponentWrapper(
         componentContext = ctx,
         preview = info.preview,
         goBack = this::onBack
     )
 
 
-    override val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>> = _panels
+    override val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponentWrapper, *, *>> = _panels
     override fun onWeightChange(newWeight: Float) = onWeightChanged(newWeight)
     override fun saveNewWeight() = onSaveWeight()
 

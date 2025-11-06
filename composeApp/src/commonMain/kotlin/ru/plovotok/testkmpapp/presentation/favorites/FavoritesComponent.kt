@@ -2,10 +2,9 @@ package ru.plovotok.testkmpapp.presentation.favorites
 
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanels
-import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
-import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
+import ru.plovotok.testkmpapp.presentation.info.BookInfoComponentWrapper
 import ru.plovotok.testkmpapp.presentation.ui.components.ChildPanelsComponent
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -16,7 +15,7 @@ interface FavoritesComponent: BackHandlerOwner, ChildPanelsComponent {
 
     fun onBookInfo(id: Int)
 
-    val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponent, *, *>>
+    val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponentWrapper, *, *>>
 
     fun onBack()
     fun saveNewWeight()
