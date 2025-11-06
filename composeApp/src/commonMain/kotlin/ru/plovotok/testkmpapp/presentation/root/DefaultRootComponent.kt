@@ -1,29 +1,19 @@
 package ru.plovotok.testkmpapp.presentation.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.slot.navigate
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
-import com.arkivanov.decompose.router.stack.replaceAll
-import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
-import ru.plovotok.shared.domain.models.BookPreview
 import ru.plovotok.testkmpapp.presentation.ViewModelFactoryProvider
 import ru.plovotok.testkmpapp.presentation.base.getViewModel
 import ru.plovotok.testkmpapp.presentation.favorites.DefaultFavoritesComponent
 import ru.plovotok.testkmpapp.presentation.favorites.FavoritesComponent
 import ru.plovotok.testkmpapp.presentation.home.DefaultHomeComponent
 import ru.plovotok.testkmpapp.presentation.home.HomeComponent
-import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
-import ru.plovotok.testkmpapp.presentation.info.DefaultBookInfoComponent
 import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.Favorites
 import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.Home
 
@@ -60,7 +50,8 @@ class DefaultRootComponent(
             weight = state,
             onWeightChanged = {
                 vm.onWeightChange(it)
-            }
+            },
+            onSaveWeight = vm::saveCurrentWeight
         )
 
     private fun favoritesComponent(componentContext: ComponentContext): FavoritesComponent =
@@ -70,7 +61,8 @@ class DefaultRootComponent(
             weight = state,
             onWeightChanged = {
                 vm.onWeightChange(it)
-            }
+            },
+            onSaveWeight = vm::saveCurrentWeight
         )
 
     override fun onBack() {

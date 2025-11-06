@@ -34,7 +34,7 @@ in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and r
 
 To build and run the development version of the Desktop app, execute gradle task from console or configuration popup
 ```shell
-./gradlew run
+./gradlew jvmRun -DmainClass=ru.plovotok.testkmpapp.MainKt --quiet
 ```
 
 ---

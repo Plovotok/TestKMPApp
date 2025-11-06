@@ -34,7 +34,6 @@ fun HomeContent(
     BaseScreen(
         contentWindowInsets = WindowInsets(0.dp)
     ) {
-        val panels by component.panels.subscribeAsState()
 
         val mode = panels.mode
 
@@ -49,6 +48,7 @@ fun HomeContent(
         DynamicWeightChildPanels(
             currentLeftWeight = { weight },
             onWeightChange = component::onWeightChange,
+            onDragReleased = component::saveNewWeight,
             panels = panels,
             mainChild = {
                 BookListContent(

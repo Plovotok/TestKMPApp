@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import ru.plovotok.shared.data.model.SimilarBookModel
 import ru.plovotok.shared.db.AppDatabase
 import ru.plovotok.shared.db.entity.FavoriteBookEntity
 import ru.plovotok.shared.domain.BooksRepository
@@ -52,6 +53,13 @@ internal class BooksTestRepository(
 
     override suspend fun removeBookFromFavorite(book: BookPreview) {
         dao.removeFromFavorite(book.id)
+    }
+
+    override suspend fun getSimilarBooks(id: Int): List<BookPreview> {
+        return withContext(Dispatchers.Default) {
+            delay(Random.nextLong(500, 1500))
+            json.decodeFromString<SimilarBookModel>(similarBooks).similarBooks
+        }
     }
 
     override suspend fun getBooks(
@@ -1748,4 +1756,58 @@ private val mockData = """
             ]
         ]
     }
+""".trimIndent()
+
+private val similarBooks = """
+   {
+    "similar_books": [
+        {
+            "id": 14296534,
+            "title": "Harry Potter and the Order of the Phoenix",
+            "image": "https://covers.openlibrary.org/b/id/11416565-M.jpg"
+        },
+        {
+            "id": 16499448,
+            "title": "Harry Potter and the Half-Blood Prince",
+            "image": "https://covers.openlibrary.org/b/id/8235163-M.jpg"
+        },
+        {
+            "id": 18610968,
+            "title": "Blood and Fire",
+            "image": "https://covers.openlibrary.org/b/id/10404497-M.jpg"
+        },
+        {
+            "id": 20464852,
+            "title": "Towers of midnight",
+            "subtitle": "Wheel of Time Book 13",
+            "image": "https://covers.openlibrary.org/b/id/6657713-M.jpg"
+        },
+        {
+            "id": 13804028,
+            "title": "Best of Robert Jordan",
+            "subtitle": "The Shadow Rising; The Fires of Heaven; Lord of Chaos; A Crown of Swords (The Wheel of Time Series)",
+            "image": "https://covers.openlibrary.org/b/id/3027823-M.jpg"
+        },
+        {
+            "id": 14987824,
+            "title": "MAR, Volume 7",
+            "image": "https://covers.openlibrary.org/b/id/765103-M.jpg"
+        },
+        {
+            "id": 19984854,
+            "title": "The Daysong of the Knightbird",
+            "image": "https://covers.openlibrary.org/b/id/1822804-M.jpg"
+        },
+        {
+            "id": 17174416,
+            "title": "The key",
+            "image": "https://covers.openlibrary.org/b/id/8369732-M.jpg"
+        },
+        {
+            "id": 20121054,
+            "title": "Bring me the head of Prince Charming",
+            "image": "https://covers.openlibrary.org/b/id/3965371-M.jpg"
+        }
+    ]
+}
 """.trimIndent()

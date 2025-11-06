@@ -21,7 +21,8 @@ class DefaultHomeComponent(
     private val componentContext: ComponentContext,
     private val onFavorites: () -> Unit,
     override val weight: Value<Float>,
-    private val onWeightChanged: (Float) -> Unit
+    private val onWeightChanged: (Float) -> Unit,
+    private val onSaveWeight: () -> Unit
 ) : HomeComponent, ComponentContext by componentContext {
 
     private val navigation = PanelsNavigation<Unit, BookInfo, Unit>()
@@ -65,14 +66,13 @@ class DefaultHomeComponent(
     ) = DefaultBookInfoComponent(
         componentContext = ctx,
         preview = info.preview,
-        onGoBack = {
-            navigation.pop()
-        }
+        goBack = this::onBack
     )
 
 
     override val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>> = _panels
     override fun onWeightChange(newWeight: Float) = onWeightChanged(newWeight)
+    override fun saveNewWeight() = onSaveWeight()
 
     override fun setMode(mode: ChildPanelsMode) {
         navigation.navigate { state ->

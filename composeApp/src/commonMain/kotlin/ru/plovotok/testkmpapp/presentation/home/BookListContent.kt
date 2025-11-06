@@ -53,7 +53,6 @@ import ru.plovotok.testkmpapp.presentation.ui.components.scroll_bar.PlatformScro
 import ru.plovotok.testkmpapp.presentation.ui.components.text_field.CloseCircleIconButton
 import ru.plovotok.testkmpapp.presentation.ui.components.text_field.SearchInputText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookListContent(
     component: BookListComponent,
@@ -63,10 +62,6 @@ fun BookListContent(
     val state by component.state.subscribeAsState()
 
     val searchConfiguration by component.filterDialog.subscribeAsState()
-
-    searchConfiguration.child?.let {
-        SearchFilterContent(it.instance)
-    }
 
     val activeGenres by component.currentGenres.subscribeAsState()
 
@@ -366,6 +361,10 @@ fun BookListContent(
                     }
                 }
             }
+        }
+
+        searchConfiguration.child?.let {
+            SearchFilterContent(it.instance)
         }
     }
 }

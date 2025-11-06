@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Expand
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,6 +51,7 @@ import ru.plovotok.testkmpapp.presentation.ui.components.panel.DynamicWidthChild
 fun <MC : Any, MT : Any, DC : Any, DT : Any, EC : Any, ET : Any> DynamicWeightChildPanels(
     currentLeftWeight: () -> Float,
     onWeightChange: (Float) -> Unit,
+    onDragReleased: () -> Unit,
     panels: ChildPanels<MC, MT, DC, DT, EC, ET>,
     mainChild: @Composable StackAnimationScope.(Child.Created<MC, MT>) -> Unit,
     detailsChild: @Composable StackAnimationScope.(Child.Created<DC, DT>) -> Unit,
@@ -85,6 +88,14 @@ fun <MC : Any, MT : Any, DC : Any, DT : Any, EC : Any, ET : Any> DynamicWeightCh
         }
 
         val iconInteractionSource = remember{ MutableInteractionSource() }
+
+        LaunchedEffect(iconInteractionSource) {
+            iconInteractionSource.interactions.collect {
+                if (it is PressInteraction.Cancel || it is PressInteraction.Release) {
+                    onDragReleased()
+                }
+            }
+        }
 
         val isHovered by iconInteractionSource.collectIsHoveredAsState()
         val isDragged by iconInteractionSource.collectIsDraggedAsState()

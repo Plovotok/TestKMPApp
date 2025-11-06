@@ -17,6 +17,8 @@ interface HomeComponent: BackHandlerOwner, ChildPanelsComponent {
     val weight: Value<Float>
     fun onWeightChange(newWeight: Float)
 
+    fun saveNewWeight()
+
     fun onBack()
 
 }

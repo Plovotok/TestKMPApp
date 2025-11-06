@@ -13,10 +13,11 @@ class BookInfoViewModel(
     private val repository: BooksRepository
 ): BaseViewModel(), KoinComponent {
 
-    val state: MutableValue<BookInfoComponent.BookState> = MutableValue(BookInfoComponent.BookState())
+    val state: MutableValue<SimilarBookInfoComponent.BookState> = MutableValue(SimilarBookInfoComponent.BookState())
 
     init {
         getBookInfo()
+        getSimilar()
         repository.getFavorites().collectInViewModel {
             it.firstOrNull { it.id == preview.id }?.let {
                 state.update { it.copy(isFavorite = true) }
@@ -34,6 +35,19 @@ class BookInfoViewModel(
             },
             onError = { error ->
                 state.update { it.copy(isLoading = false, error = error, fullInfo = null) }
+            }
+        )
+    }
+
+    private fun getSimilar() {
+        suspend {
+            repository.getSimilarBooks(preview.id)
+        }.runInViewModelScope(
+            onSuccess = { list ->
+                state.update { it.copy(similar = list) }
+            },
+            onError = {
+                it.printStackTrace()
             }
         )
     }

@@ -46,6 +46,7 @@ fun FavoritesContent(
         DynamicWeightChildPanels(
             currentLeftWeight = { weight },
             onWeightChange = component::onWeightChange,
+            onDragReleased = component::saveNewWeight,
             panels = panels,
             mainChild = {
                 FavoritesListContent(

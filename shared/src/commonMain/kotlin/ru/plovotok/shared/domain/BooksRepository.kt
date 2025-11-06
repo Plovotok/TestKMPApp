@@ -12,6 +12,8 @@ interface BooksRepository {
     suspend fun addBookToFavorite(book: BookPreview)
     suspend fun removeBookFromFavorite(book: BookPreview)
 
+    suspend fun getSimilarBooks(id: Int): List<BookPreview>
+
     suspend fun getBooks(
         query: String = "",
         genres: List<String> = emptyList(),

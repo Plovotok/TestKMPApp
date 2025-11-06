@@ -44,6 +44,10 @@ internal class BooksRepositoryImpl(
         dao.removeFromFavorite(book.id)
     }
 
+    override suspend fun getSimilarBooks(id: Int): List<BookPreview> {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun getBooks(
         query: String,

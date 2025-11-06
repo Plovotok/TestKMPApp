@@ -17,7 +17,7 @@ kotlin {
     androidLibrary {
         namespace = "ru.plovotok.shared"
         compileSdk = 36
-        minSdk = 24
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     jvm()

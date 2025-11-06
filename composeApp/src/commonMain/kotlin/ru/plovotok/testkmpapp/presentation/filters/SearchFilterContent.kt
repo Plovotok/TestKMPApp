@@ -12,12 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -41,7 +40,6 @@ import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import ru.plovotok.testkmpapp.presentation.ui.components.text_field.SearchInputText
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchFilterContent(
     component: SearchFiltersComponent
@@ -49,26 +47,25 @@ fun SearchFilterContent(
 
     val dialogState = rememberAdaptiveDialogState()
 
-    suspend fun dismiss() {
-        dialogState.dismiss()
-        component.dismiss()
-    }
-
     val scope = rememberCoroutineScope()
 
+    fun dismiss() {
+        scope.launch {
+            dialogState.dismiss()
+        }.invokeOnCompletion { component.dismiss() }
+    }
+
+    val gridState = rememberLazyGridState()
+
     AdaptiveDialogLayout(
-        onDismiss = {
-            scope.launch {
-                dismiss()
-            }
-        },
+        onDismiss = component::dismiss,
+        state = dialogState,
+        topBarColor = if (gridState.canScrollBackward) colorScheme.navigationColor else colorScheme.sheetColor,
         actions = {
             IconButton(
                 onClick = {
                     component.setNewGenres(emptyList())
-                    scope.launch {
-                        dismiss()
-                    }
+                    dismiss()
                 },
                 modifier = Modifier
                     .padding(end = 8.dp)
@@ -76,7 +73,10 @@ fun SearchFilterContent(
                 Box(
                     modifier = Modifier
                         .size(26.dp)
-                        .background(colorScheme.semiLightGrayTinted.copy(alpha = 0.3f), CircleShape),
+                        .background(
+                            colorScheme.semiLightGrayTinted.copy(alpha = 0.3f),
+                            CircleShape
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -88,18 +88,21 @@ fun SearchFilterContent(
                 }
             }
         },
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().fillMaxHeight(0.85f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        extraTopContent = {
             val query by component.query.subscribeAsState()
             SearchInputText(
                 text = query,
                 onTextChange = component::onQueryChanged,
                 hint = "Fantasy",
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 6.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                    .padding(bottom = 6.dp)
             )
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(0.85f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             val state by component.state.subscribeAsState()
 
@@ -115,9 +118,7 @@ fun SearchFilterContent(
                                 text = "Apply",
                                 onClick = {
                                     component.setNewGenres(state.selectedItems)
-                                    scope.launch {
-                                        dismiss()
-                                    }
+                                    dismiss()
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -129,6 +130,7 @@ fun SearchFilterContent(
                     containerColor = Color.Transparent
                 ) {
                     LazyVerticalGrid(
+                        state = gridState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(

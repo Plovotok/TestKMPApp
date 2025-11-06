@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
@@ -84,7 +86,9 @@ fun main() {
     DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
 
     application {
-        val windowState = rememberWindowState()
+        val windowState = rememberWindowState(
+            size = DpSize(1000.dp, 640.dp)
+        )
 
         Window(
             icon = painterResource(Res.drawable.app_icon),

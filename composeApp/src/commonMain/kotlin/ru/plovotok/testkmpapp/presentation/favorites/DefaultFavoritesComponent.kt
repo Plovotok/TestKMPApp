@@ -21,7 +21,8 @@ class DefaultFavoritesComponent(
     private val componentContext: ComponentContext,
     private val onBack: () -> Unit,
     override val weight: Value<Float>,
-    private val onWeightChanged: (Float) -> Unit
+    private val onWeightChanged: (Float) -> Unit,
+    private val onSaveWeight: () -> Unit
 ): FavoritesComponent, ComponentContext by componentContext {
 
     private val navigation = PanelsNavigation<Unit, BookInfo, Unit>()
@@ -60,9 +61,7 @@ class DefaultFavoritesComponent(
     ) = DefaultBookInfoComponent(
         componentContext = ctx,
         preview = info.preview,
-        onGoBack = {
-            navigation.pop()
-        }
+        goBack = onBack
     )
 
     override fun onWeightChange(newWeight: Float) = onWeightChanged(newWeight)
@@ -82,6 +81,8 @@ class DefaultFavoritesComponent(
     override fun onBack() {
         navigation.pop()
     }
+
+    override fun saveNewWeight() = onSaveWeight()
 
     private companion object {
         private val SERIALIZERS = Triple(Unit.serializer(), BookInfo.serializer(), Unit.serializer())
