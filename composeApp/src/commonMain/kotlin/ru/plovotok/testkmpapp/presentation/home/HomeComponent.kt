@@ -12,6 +12,8 @@ interface HomeComponent: BackHandlerOwner, ChildPanelsComponent {
 
     val panels: Value<ChildPanels<*, BookListComponent, *, BookInfoComponent, *, *>>
 
+    fun onBookInfo(id: Int)
+
     val weight: Value<Float>
     fun onWeightChange(newWeight: Float)
 

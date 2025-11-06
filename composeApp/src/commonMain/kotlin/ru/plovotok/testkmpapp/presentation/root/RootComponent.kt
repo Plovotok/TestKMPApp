@@ -10,10 +10,6 @@ import ru.plovotok.testkmpapp.presentation.home.HomeComponent
 import ru.plovotok.testkmpapp.presentation.info.BookInfoComponent
 
 interface RootComponent: BackHandlerOwner {
-
-    val dialog: Value<ChildSlot<*, BookInfoComponent>>
-    fun onBookInfo(id: Int)
-    fun closeDialog()
     val stack: Value<ChildStack<*, Child>>
 
     fun onBack()

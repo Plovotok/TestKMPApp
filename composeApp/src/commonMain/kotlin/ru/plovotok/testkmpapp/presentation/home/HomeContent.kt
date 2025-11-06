@@ -10,6 +10,8 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
+import ru.plovotok.testkmpapp.presentation.DeeplinkHandler
+import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
 import ru.plovotok.testkmpapp.presentation.getPredictiveBackAnimatable
 import ru.plovotok.testkmpapp.presentation.info.BookInfoContent
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
@@ -35,6 +37,14 @@ fun HomeContent(
         val panels by component.panels.subscribeAsState()
 
         val mode = panels.mode
+
+        DeeplinkHandler {
+            when (it) {
+                is DeeplinkHelper.DeeplinkAction.BookDetails -> {
+                    component.onBookInfo(it.id)
+                }
+            }
+        }
 
         DynamicWeightChildPanels(
             currentLeftWeight = { weight },

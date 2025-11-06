@@ -12,6 +12,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 import ru.plovotok.shared.domain.models.BookPreview
@@ -29,41 +30,6 @@ import ru.plovotok.testkmpapp.presentation.root.RootComponent.Child.Home
 class DefaultRootComponent(
     private val ctx: ComponentContext
 ) : RootComponent, ComponentContext by ctx, ViewModelFactoryProvider {
-
-    private val dialogNavigation = SlotNavigation<BookDetails>()
-
-    override val dialog: Value<ChildSlot<*, BookInfoComponent>> =
-        childSlot(
-        source = dialogNavigation,
-        serializer = BookDetails.serializer(),
-        handleBackButton = true
-        ) { config, ctx ->
-            val preview = BookPreview(
-                id = config.id,
-                title = null,
-                image = null
-            )
-            createBookInfoComponent(preview, ctx)
-        }
-
-    override fun closeDialog() {
-        dialogNavigation.dismiss()
-    }
-
-    private fun createBookInfoComponent(
-        preview: BookPreview,
-        componentContext: ComponentContext
-    ): DefaultBookInfoComponent = DefaultBookInfoComponent(
-        componentContext = componentContext,
-        preview = preview,
-        onGoBack = {
-            dialogNavigation.dismiss()
-        }
-    )
-
-    override fun onBookInfo(id: Int) {
-        dialogNavigation.navigate { BookDetails(id) }
-    }
 
     private val vm: RootViewModel = getViewModel { vmFactory.createRootViewModel() }
 
@@ -120,8 +86,5 @@ class DefaultRootComponent(
         @Serializable
         data object Favorites: Config
     }
-
-    @Serializable
-    data class BookDetails(val id: Int)
 
 }

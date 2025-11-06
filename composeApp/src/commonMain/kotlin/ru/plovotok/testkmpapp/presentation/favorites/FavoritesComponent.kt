@@ -14,6 +14,8 @@ interface FavoritesComponent: BackHandlerOwner, ChildPanelsComponent {
     val weight: Value<Float>
     fun onWeightChange(newWeight: Float)
 
+    fun onBookInfo(id: Int)
+
     val panels: Value<ChildPanels<*, FavoritesListComponent, *, BookInfoComponent, *, *>>
 
     fun onBack()

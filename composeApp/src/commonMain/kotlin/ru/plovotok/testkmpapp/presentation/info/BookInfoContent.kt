@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -57,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -182,10 +184,6 @@ fun BookInfoContent(
         ) { paddings ->
             Box {
 
-                var titleSize: Int by remember {
-                    mutableStateOf(Int.MAX_VALUE)
-                }
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -214,14 +212,6 @@ fun BookInfoContent(
                                 isLightImage = it
                             }
                         )
-
-                        LaunchedEffect(paddings, height, titleSize) {
-                            snapshotFlow { scrollState.value }.collect {
-                                with (density) {
-                                    showTitle = it >= (paddings.calculateTopPadding().toPx() + height + titleSize + 48.dp.toPx())
-                                }
-                            }
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -231,10 +221,14 @@ fun BookInfoContent(
                         style = MaterialTheme.typography.headlineLarge,
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
-                            .onSizeChanged {
-                                titleSize = it.height
-                            }
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .onGloballyPositioned {
+                                with(density) {
+                                    showTitle =
+                                        it.positionInRoot().y + it.size.height <= paddings.calculateTopPadding()
+                                            .toPx()
+                                }
+                            },
                         textAlign = TextAlign.Start,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis

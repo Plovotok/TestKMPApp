@@ -25,8 +25,9 @@ class MainActivity : ComponentActivity() {
         }
 
         intent?.data?.path?.let {
-            DeeplinkHelper.handleDeepLink(it)
         }
+        DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
+        intent = null
 
 
         val root = DefaultRootComponent(defaultComponentContext())

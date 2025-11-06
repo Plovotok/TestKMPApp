@@ -142,7 +142,10 @@ fun SearchFilterContent(
                             val isSelected = state.selectedItems.contains(it)
                             ListItem(
                                 leadingContent = {
-                                    Box(modifier = Modifier.size(32.dp)) {
+                                    Box(
+                                        modifier = Modifier.size(32.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
                                         if (isSelected) {
                                             Icon(
                                                 imageVector = Icons.Default.Check,

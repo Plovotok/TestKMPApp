@@ -37,6 +37,12 @@ class DefaultFavoritesComponent(
             extraFactory = { _, _ -> },
         )
 
+    override fun onBookInfo(id: Int) {
+        navigation.navigate { state ->
+            state.copy(details = BookInfo(BookPreview(id, null)))
+        }
+    }
+
     private fun listComponent(context: ComponentContext) =
         DefaultFavoritesListComponent(
             componentContext = context,

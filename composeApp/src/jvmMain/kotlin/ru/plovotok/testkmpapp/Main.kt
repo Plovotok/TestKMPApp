@@ -75,9 +75,13 @@ fun main() {
         }
     }
 
-    Desktop.getDesktop().setOpenURIHandler { uri ->
-        DeeplinkHelper.handleDeepLink(uri.uri.toString())
+    if (Desktop.getDesktop().isSupported(Desktop.Action.APP_OPEN_URI)) {
+        Desktop.getDesktop().setOpenURIHandler { uri ->
+            DeeplinkHelper.handleDeepLink(uri.uri.toString())
+        }
     }
+
+    DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
 
     application {
         val windowState = rememberWindowState()
