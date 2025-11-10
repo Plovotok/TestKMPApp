@@ -6,9 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import ru.plovotok.testkmpapp.presentation.backAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import ru.plovotok.testkmpapp.presentation.favorites.FavoritesContent
 import ru.plovotok.testkmpapp.presentation.home.HomeContent
+import ru.plovotok.testkmpapp.presentation.iosLikeSlide
 import ru.plovotok.testkmpapp.presentation.ui.theme.BooksTheme
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -26,7 +27,7 @@ fun RootContent(
         Children(
             stack = component.stack,
             modifier = Modifier.fillMaxSize(),
-            animation = backAnimation(component.backHandler, component::onBack)
+            animation = stackAnimation(iosLikeSlide())
         ) {
             when (val instance = it.instance) {
                 is RootComponent.Child.Home -> HomeContent(component = instance.component)

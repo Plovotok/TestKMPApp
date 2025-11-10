@@ -25,7 +25,7 @@ class DefaultBookInfoComponentWrapper(
     override val booksStack: Value<ChildStack<ChildBook, BookInfoComponent>> = childStack(
         source = navigation,
         serializer = ChildBook.serializer(),
-        initialConfiguration = ChildBook(preview, false, Uuid.random().toString()),
+        initialConfiguration = ChildBook(preview, false, 0),
         handleBackButton = true,
         childFactory = ::createChildBookComponent
     )
@@ -43,7 +43,7 @@ class DefaultBookInfoComponentWrapper(
                 }
             },
             onSimilar = {
-                navigation.push(ChildBook(it, true, Uuid.random().toString()))
+                navigation.push(ChildBook(it, true, book.modelId + 1))
             }
         )
 
@@ -55,6 +55,6 @@ class DefaultBookInfoComponentWrapper(
     data class ChildBook(
         val preview: BookPreview,
         val hasParent: Boolean,
-        val modelId: String
+        val modelId: Int
     )
 }

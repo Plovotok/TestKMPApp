@@ -13,7 +13,7 @@ struct iOSApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootView(root: appDelegate.root, backDispatcher: appDelegate.backDispatcher)
+            RootView(root: appDelegate.root)
                 .ignoresSafeArea(.all)
                 .onOpenURL { (url) in
                     DeeplinkHelper.shared.handleDeepLink(fullPath: url.absoluteString)
@@ -31,9 +31,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 lifecycle: ApplicationLifecycle(),
                 stateKeeper: stateKeeper,
                 instanceKeeper: nil,
-                backHandler: backDispatcher
-            ),
+                backHandler: nil
+            )
         )
-    
-    var backDispatcher: BackDispatcher = BackDispatcherKt.BackDispatcher()
 }

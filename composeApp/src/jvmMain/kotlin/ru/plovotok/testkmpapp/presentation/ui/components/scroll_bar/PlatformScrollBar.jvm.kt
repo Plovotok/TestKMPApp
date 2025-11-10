@@ -46,7 +46,7 @@ actual fun BoxScope.PlatformScrollController(
 
     val alpha by animateFloatAsState(
         targetValue = if (listState.isScrollInProgress || isDragged || isPressed || isHovered) 1f else 0f,
-        animationSpec = tween(250, delayMillis = if (listState.isScrollInProgress) 0 else 200)
+        animationSpec = tween(250, delayMillis = if (listState.isScrollInProgress) 0 else 700)
     )
 
     VerticalScrollbar(

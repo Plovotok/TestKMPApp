@@ -4,10 +4,9 @@ import ComposeApp
 
 struct RootView: UIViewControllerRepresentable {
     let root: RootComponent
-    let backDispatcher: BackDispatcher
     
     func makeUIViewController(context: Context) -> UIViewController {
-        let controller = RootViewControllerKt.RootViewController(root: root, backDispatcher: backDispatcher)
+        let controller = RootViewControllerKt.RootViewController(root: root)
         controller.overrideUserInterfaceStyle = .light
         return controller
     }

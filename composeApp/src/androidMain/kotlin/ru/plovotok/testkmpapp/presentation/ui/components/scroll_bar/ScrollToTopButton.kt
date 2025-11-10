@@ -1,4 +1,4 @@
-package ru.plovotok.testkmpapp.presentation.ui.components.buttons
+package ru.plovotok.testkmpapp.presentation.ui.components.scroll_bar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.AnimationSpec

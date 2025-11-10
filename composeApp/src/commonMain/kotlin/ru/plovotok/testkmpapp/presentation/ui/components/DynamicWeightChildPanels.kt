@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
@@ -91,7 +93,7 @@ fun <MC : Any, MT : Any, DC : Any, DT : Any, EC : Any, ET : Any> DynamicWeightCh
 
         LaunchedEffect(iconInteractionSource) {
             iconInteractionSource.interactions.collect {
-                if (it is PressInteraction.Cancel || it is PressInteraction.Release) {
+                if (it is DragInteraction.Stop || it is DragInteraction.Cancel) {
                     onDragReleased()
                 }
             }

@@ -61,7 +61,7 @@ class DefaultFavoritesComponent(
     ) = DefaultBookInfoComponentWrapper(
         componentContext = ctx,
         preview = info.preview,
-        goBack = onBack
+        goBack = ::onBack
     )
 
     override fun onWeightChange(newWeight: Float) = onWeightChanged(newWeight)

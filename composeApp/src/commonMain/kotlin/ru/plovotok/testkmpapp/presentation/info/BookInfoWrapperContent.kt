@@ -5,8 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import ru.plovotok.testkmpapp.presentation.backAnimation
+import ru.plovotok.testkmpapp.presentation.iosLikeSlide
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 
 @Composable
@@ -20,7 +21,7 @@ fun BookInfoWrapperContent(
         Children(
             stack = stack,
             modifier = modifier.fillMaxSize(),
-            animation = backAnimation(component.backHandler, component::onBack)
+            animation = stackAnimation(iosLikeSlide())
         ) {
             BookInfoContent(
                 it.instance,

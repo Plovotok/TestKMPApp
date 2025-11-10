@@ -66,7 +66,7 @@ class DefaultHomeComponent(
     ) = DefaultBookInfoComponentWrapper(
         componentContext = ctx,
         preview = info.preview,
-        goBack = this::onBack
+        goBack = ::onBack
     )
 
 

@@ -7,12 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import ru.plovotok.testkmpapp.presentation.DeeplinkHandler
 import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
-import ru.plovotok.testkmpapp.presentation.getPredictiveBackAnimatable
 import ru.plovotok.testkmpapp.presentation.info.BookInfoWrapperContent
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.components.DynamicWeightChildPanels
@@ -68,13 +66,7 @@ fun HomeContent(
             secondPanelPlaceholder = {
                 EmptyScreen(title = "Choose book from list")
             },
-            predictiveBackParams = {
-                PredictiveBackParams(
-                    backHandler = component.backHandler,
-                    onBack = component::onBack,
-                    animatable = ::getPredictiveBackAnimatable,
-                )
-            },
+            predictiveBackParams = { null },
             modifier = modifier.fillMaxSize(),
             component = component,
         )

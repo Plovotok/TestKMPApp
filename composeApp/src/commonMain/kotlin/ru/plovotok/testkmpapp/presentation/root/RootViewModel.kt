@@ -25,6 +25,7 @@ class RootViewModel(
     }
 
     fun saveCurrentWeight() {
+        println("save weight")
         viewModelScope.launch {
             settings.setFloat("DEFAULT_PANEL_WEIGHT", leftPanelState.value)
         }

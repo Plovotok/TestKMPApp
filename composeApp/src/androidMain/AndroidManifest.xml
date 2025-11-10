@@ -15,7 +15,6 @@
         <activity
             android:exported="true"
             android:launchMode="singleTask"
-            android:enableOnBackInvokedCallback="true"
             android:screenOrientation="fullUser"
             android:name=".MainActivity">
             <intent-filter>

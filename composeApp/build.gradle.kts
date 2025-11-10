@@ -32,7 +32,6 @@ kotlin {
 
             export(libs.decompose)
             export(libs.essenty.lifecycle)
-            export(libs.essenty.back.handler)
             export(libs.essenty.state.keeper)
 
             this.binaryOption("bundleId", "ru.plovotok.kmp.TestKMPApp")
