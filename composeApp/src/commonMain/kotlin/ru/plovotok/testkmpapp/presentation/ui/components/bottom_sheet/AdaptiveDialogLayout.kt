@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.window.core.layout.WindowSizeClass
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

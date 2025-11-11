@@ -20,12 +20,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.plovotok.testkmpapp.presentation.ui.theme.LocalColorScheme
 
 @Composable
 fun BaseScreen(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
-    containerColor: Color = LocalAppScheme.current.background,
+    containerColor: Color = LocalColorScheme.current.background,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable ColumnScope.(PaddingValues) -> Unit,
 ) {
@@ -42,7 +43,7 @@ fun BaseScreen(
         modifier = modifier
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides LocalAppScheme.current.onBackground
+            LocalContentColor provides LocalColorScheme.current.onBackground
         ) {
             Column(
                 modifier = Modifier

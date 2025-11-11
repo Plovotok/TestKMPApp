@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
@@ -44,8 +43,7 @@ import ru.plovotok.shared.isInternetError
 import ru.plovotok.testkmpapp.presentation.filters.SearchFilterContent
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
-import ru.plovotok.testkmpapp.presentation.ui.BookTopbarDefaults
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookListItem
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.NoInternetScreen

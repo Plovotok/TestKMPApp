@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.bottom_sheet.AdaptiveDialogLayout
 import ru.plovotok.testkmpapp.presentation.ui.components.bottom_sheet.rememberAdaptiveDialogState
 import ru.plovotok.testkmpapp.presentation.ui.components.buttons.PrimaryButton

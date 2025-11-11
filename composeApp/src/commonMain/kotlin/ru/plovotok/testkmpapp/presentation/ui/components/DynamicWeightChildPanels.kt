@@ -6,7 +6,6 @@ import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -29,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
@@ -45,7 +43,7 @@ import com.arkivanov.decompose.router.panels.ChildPanels
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import ru.plovotok.testkmpapp.presentation.iosLikeSlideExperimental
 import ru.plovotok.testkmpapp.presentation.ui.LocalResizeIcon
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.panel.DynamicWidthChildPanelLayout
 
 @OptIn(ExperimentalDecomposeApi::class)

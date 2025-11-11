@@ -68,8 +68,8 @@ import ru.plovotok.shared.isInternetError
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
 import ru.plovotok.testkmpapp.presentation.ui.BookTopbarDefaults
-import ru.plovotok.testkmpapp.presentation.ui.LocalAppScheme
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.LocalColorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookInfoHeaderImage
 import ru.plovotok.testkmpapp.presentation.ui.components.BookListItem
 import ru.plovotok.testkmpapp.presentation.ui.components.StarRating
@@ -81,7 +81,7 @@ import kotlin.math.min
 fun BookInfoContent(
     component: BookInfoComponent,
     showBackButton: Boolean,
-    containerColor: Color = LocalAppScheme.current.background,
+    containerColor: Color = LocalColorScheme.current.background,
     modifier: Modifier = Modifier
 ) {
     val model by component.state.subscribeAsState()

@@ -8,9 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import ru.plovotok.testkmpapp.presentation.ui.AppColorScheme
-import ru.plovotok.testkmpapp.presentation.ui.LocalAppScheme
-import ru.plovotok.testkmpapp.presentation.ui.components.indication.rememberCupertinoIndication
+import com.slapps.cupertino.icons.CupertinoIcons
 
 @Composable
 fun BooksTheme(
@@ -19,10 +17,9 @@ fun BooksTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalAppScheme provides if (isDark) darkColorScheme() else lightColorScheme()
+        LocalColorScheme provides if (isDark) darkColorScheme() else lightColorScheme()
     ) {
-        val colors = LocalAppScheme.current
-
+        val colors = LocalColorScheme.current
         MaterialTheme(
             colorScheme = MaterialTheme.colorScheme.copy(
                 primary = colors.primary,

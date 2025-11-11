@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.isFinite
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastFirst
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToInt

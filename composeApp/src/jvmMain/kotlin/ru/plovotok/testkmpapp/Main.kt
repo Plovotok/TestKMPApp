@@ -1,13 +1,10 @@
 package ru.plovotok.testkmpapp
 
-import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -23,7 +20,6 @@ import com.github.tkuenneth.nativeparameterstoreaccess.MacOSDefaults
 import com.github.tkuenneth.nativeparameterstoreaccess.NativeParameterStoreAccess.IS_MACOS
 import com.github.tkuenneth.nativeparameterstoreaccess.NativeParameterStoreAccess.IS_WINDOWS
 import com.github.tkuenneth.nativeparameterstoreaccess.WindowsRegistry
-import com.sun.tools.javac.tree.TreeInfo.args
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -83,7 +79,10 @@ fun main() {
         }
     }
 
-    DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
+    GlobalScope.launch {
+        delay(4000)
+        DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
+    }
 
     application {
         val windowState = rememberWindowState(

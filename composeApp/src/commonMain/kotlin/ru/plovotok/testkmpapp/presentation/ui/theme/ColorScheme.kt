@@ -1,16 +1,16 @@
-package ru.plovotok.testkmpapp.presentation.ui
+package ru.plovotok.testkmpapp.presentation.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-val LocalAppScheme = compositionLocalOf<AppColorScheme> {
+val LocalColorScheme = compositionLocalOf<AppColorScheme> {
     error("AppColorScheme not initialized")
 }
 
 val colorScheme
     @Composable
-    get() = LocalAppScheme.current
+    get() = LocalColorScheme.current
 
 data class AppColorScheme(
     val background: Color,

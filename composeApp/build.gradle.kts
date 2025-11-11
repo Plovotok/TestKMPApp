@@ -76,6 +76,8 @@ kotlin {
 
             implementation(libs.compose.icons)
 
+            implementation(libs.cupertino.icons.extended)
+
             implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.2.0-beta01")
         }
         iosMain.dependencies {

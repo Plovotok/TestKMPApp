@@ -18,7 +18,7 @@ decompose = "3.4.0"
 essenty = "2.5.0"
 koin = "4.1.1"
 serialization = "1.9.0"
-ktor = "3.3.1"
+ktor = "3.3.2"
 coil = "3.3.0"
 kotlinx-coroutines = "1.10.2"
 compottie = "2.0.2"
@@ -32,6 +32,8 @@ uiTooling = "1.9.4"
 kotlinStdlib = "2.2.21"
 runner = "1.7.0"
 core = "1.7.0"
+cupertino = "2.3.1"
+
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -91,6 +93,9 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", vers
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
+
+cupertino = { group = "io.github.schott12521", name = "cupertino", version.ref = "cupertino" }
+cupertino-icons-extended = { group = "io.github.schott12521", name = "cupertino-icons-extended", version.ref = "cupertino" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

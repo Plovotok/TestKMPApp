@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import ru.plovotok.testkmpapp.presentation.ui.BaseScreen
 import ru.plovotok.testkmpapp.presentation.ui.BookTopBar
-import ru.plovotok.testkmpapp.presentation.ui.colorScheme
+import ru.plovotok.testkmpapp.presentation.ui.theme.colorScheme
 import ru.plovotok.testkmpapp.presentation.ui.components.BookListItem
 import ru.plovotok.testkmpapp.presentation.ui.components.icons.BackButton
 import ru.plovotok.testkmpapp.presentation.ui.components.screens.EmptyScreen
