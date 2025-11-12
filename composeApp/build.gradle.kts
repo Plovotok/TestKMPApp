@@ -92,6 +92,7 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
 
             implementation("com.github.tkuenneth:nativeparameterstoreaccess:0.1.3")
+            implementation("org.jxmapviewer:jxmapviewer2:2.8")
         }
     }
 }

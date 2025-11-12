@@ -1,9 +1,15 @@
 package ru.plovotok.testkmpapp
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.SwingPanel
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.DpSize
@@ -26,6 +32,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jxmapviewer.JXMapKit
+import org.jxmapviewer.VirtualEarthTileFactoryInfo
+import org.jxmapviewer.cache.FileBasedLocalCache
+import org.jxmapviewer.viewer.DefaultTileFactory
+import org.jxmapviewer.viewer.GeoPosition
+import org.jxmapviewer.viewer.TileFactoryInfo
 import org.koin.core.context.startKoin
 import ru.plovotok.shared.di.appModule
 import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
@@ -37,8 +49,14 @@ import testkmpapp.composeapp.generated.resources.Res
 import testkmpapp.composeapp.generated.resources.app_icon
 import java.awt.Cursor
 import java.awt.Desktop
+import java.io.File
 import java.lang.System.setProperty
 import java.util.Locale
+import javax.swing.UIManager
+import kotlin.math.atan
+import kotlin.math.pow
+import kotlin.math.sinh
+
 
 @OptIn(DelicateCoroutinesApi::class)
 fun main() {
@@ -79,9 +97,10 @@ fun main() {
         }
     }
 
-    GlobalScope.launch {
-        delay(4000)
-        DeeplinkHelper.handleDeepLink("compose://www.plovotok.ru/book/13469330")
+    try {
+        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName())
+    } catch (_: Throwable) {
+
     }
 
     application {
@@ -108,6 +127,30 @@ fun main() {
                 RootContent(root, isDark = isInDarkMode)
             }
 
+            SwingPanel(
+                background = Color.Yellow,
+                factory = {
+                    // Create a TileFactoryInfo for OpenStreetMap
+//                    val info: TileFactoryInfo = OSMTileFactoryInfo("OpenStreetMap", "https://tile.openstreetmap.org")
+                    val info: TileFactoryInfo = VirtualEarthTileFactoryInfo(
+                        VirtualEarthTileFactoryInfo.MAP
+                    )
+                    val tileFactory: DefaultTileFactory = DefaultTileFactory(info)
+                    tileFactory.apply {
+                        setLocalCache(FileBasedLocalCache(File(System.getProperty("java.io.tmpdir"), "tiles"), true))
+                        setThreadPoolSize(8)
+                    }
+                    // Set the focus
+                    val moscow: GeoPosition = GeoPosition(55.7569, 37.6151)
+                    JXMapKit().apply {
+                        setTileFactory(tileFactory)
+                        addressLocation = moscow
+                        setZoom(12)
+                    }
+                },
+                modifier = Modifier.size(800.dp).clip(CircleShape)
+            )
+
         }
     }
 }
@@ -128,4 +171,37 @@ fun isSystemInDarkTheme(): Boolean = when {
         result.lowercase(Locale.ROOT).contains("dark")
     }
     else -> false
+}
+
+class DgisTileFactoryInfo(
+    private val key: String
+): TileFactoryInfo(
+    "Dgis",
+    1, 18, 19,
+    256, true, true,
+    "https://static.maps.2gis.com/1.0",
+    "x", "y", "z"
+) {
+
+
+    override fun getTileUrl(x: Int, y: Int, zoom: Int): String? {
+        val zoom = totalMapZoom - zoom
+
+        val xtile = x + 0.5
+        val ytile = y + 0.5
+
+        val n = 2.0.pow(zoom.toDouble())
+        val lon_deg = ((xtile / n) * 360.0) - 180.0
+        val lat_rad = atan(sinh(Math.PI * (1 - 2 * ytile / n)))
+        val lat_deg = (lat_rad * 180.0) / Math.PI
+
+
+        val url = (baseURL
+                + "?s=256x256"
+                + "&z=" + zoom
+                + "&c=" + lat_deg + "," + lon_deg
+                + "&key=" + key)
+
+        return url
+    }
 }
