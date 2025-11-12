@@ -1,5 +1,6 @@
 package ru.plovotok.testkmpapp
 
+import androidx.compose.foundation.ComposeFoundationFlags
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,11 +34,14 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jxmapviewer.JXMapKit
+import org.jxmapviewer.JXMapViewer
 import org.jxmapviewer.VirtualEarthTileFactoryInfo
 import org.jxmapviewer.cache.FileBasedLocalCache
 import org.jxmapviewer.viewer.DefaultTileFactory
 import org.jxmapviewer.viewer.GeoPosition
 import org.jxmapviewer.viewer.TileFactoryInfo
+import org.jxmapviewer.viewer.wms.WMSService
+import org.jxmapviewer.viewer.wms.WMSTileFactory
 import org.koin.core.context.startKoin
 import ru.plovotok.shared.di.appModule
 import ru.plovotok.testkmpapp.presentation.DeeplinkHelper
@@ -102,6 +106,7 @@ fun main() {
     } catch (_: Throwable) {
 
     }
+    System.setProperty("compose.interop.blending", "true") // for clipping by compose
 
     application {
         val windowState = rememberWindowState(
@@ -130,11 +135,9 @@ fun main() {
             SwingPanel(
                 background = Color.Yellow,
                 factory = {
-                    // Create a TileFactoryInfo for OpenStreetMap
 //                    val info: TileFactoryInfo = OSMTileFactoryInfo("OpenStreetMap", "https://tile.openstreetmap.org")
-                    val info: TileFactoryInfo = VirtualEarthTileFactoryInfo(
-                        VirtualEarthTileFactoryInfo.MAP
-                    )
+                    val info: TileFactoryInfo = DgisTileFactoryInfo
+//                    val info: TileFactoryInfo = MapboxTileFactoryInfo("")
                     val tileFactory: DefaultTileFactory = DefaultTileFactory(info)
                     tileFactory.apply {
                         setLocalCache(FileBasedLocalCache(File(System.getProperty("java.io.tmpdir"), "tiles"), true))
@@ -173,9 +176,7 @@ fun isSystemInDarkTheme(): Boolean = when {
     else -> false
 }
 
-class DgisTileFactoryInfo(
-    private val key: String
-): TileFactoryInfo(
+object DgisTileFactoryInfo: TileFactoryInfo(
     "Dgis",
     1, 18, 19,
     256, true, true,
@@ -199,8 +200,26 @@ class DgisTileFactoryInfo(
         val url = (baseURL
                 + "?s=256x256"
                 + "&z=" + zoom
-                + "&c=" + lat_deg + "," + lon_deg
-                + "&key=" + key)
+                + "&c=" + lat_deg + "," + lon_deg)
+        println(url)
+
+        return url
+    }
+}
+
+class MapboxTileFactoryInfo(
+    private val mapboxToken: String
+): TileFactoryInfo(
+    "Mapbox",
+    1, 19-2, 19,
+    1024, true, true,
+    "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/512", // streets-v8 ...
+    "x", "y", "z"
+) {
+
+    override fun getTileUrl(x: Int, y: Int, zoom: Int): String? {
+        val zoom = totalMapZoom - zoom
+        val url = ("$baseURL/$zoom/${x}/${y}@2x?access_token=$mapboxToken")
 
         return url
     }
